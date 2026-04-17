@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="gMark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#F5AC58"/>
+      <stop offset="40%"  stop-color="#D07428"/>
+      <stop offset="100%" stop-color="#8A4410"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" fill="#1A1A17"/>
+
+  <!-- Subtle orange border -->
+  <rect width="512" height="512" fill="none" stroke="rgba(255,140,63,0.35)" stroke-width="6"/>
+
+  <!-- Orange top bar -->
+  <rect x="0" y="0" width="512" height="4" fill="#FF8C3F" opacity="0.9"/>
+
+  <!-- Orange corner accents — top-left -->
+  <rect x="0"   y="0"  width="64" height="10" fill="#FF8C3F"/>
+  <rect x="0"   y="0"  width="10" height="64" fill="#FF8C3F"/>
+
+  <!-- Orange corner accents — bottom-right -->
+  <rect x="448" y="502" width="64" height="10" fill="#FF8C3F"/>
+  <rect x="502" y="448" width="10" height="64" fill="#FF8C3F"/>
+
+  <!-- Chevron double-mark — centered (viewBox 80×86, scale 4.1) -->
+  <g transform="translate(87, 71) scale(4.225)">
+    <polygon points="12,4 62,28 12,52 12,42 52,28 12,14" fill="url(#gMark)"/>
+    <polygon points="68,34 18,58 68,82 68,72 28,58 68,44" fill="url(#gMark)"/>
+  </g>
+</svg>
