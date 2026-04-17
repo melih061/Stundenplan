@@ -23,6 +23,7 @@
       --bd-hi: rgba(255,255,255,0.14);
       --ok:    #22C55E;
       --info:  #60A5FA;
+      --warn:  #f59e0b;
       --f-display: 'Lora', serif;
       --f-body:    'Space Grotesk', sans-serif;
       --f-mono:    'JetBrains Mono', monospace;
@@ -201,10 +202,6 @@
       padding: 0 12px calc(var(--bottom-h) + 20px);
     }
 
-    .time-group {
-      margin-bottom: 4px;
-    }
-
     .course-card {
       background: var(--bg-2);
       border: 1px solid var(--bd);
@@ -304,7 +301,6 @@
       letter-spacing: 0.06em;
     }
 
-    /* Now indicator on card */
     .course-card.is-now {
       border-color: var(--orange);
       background: var(--orange-glow);
@@ -327,7 +323,6 @@
 
     .course-card.is-done { opacity: 0.45; }
 
-    /* Empty state */
     .empty-state {
       text-align: center;
       padding: 60px 24px;
@@ -531,7 +526,7 @@
       border: 1px solid var(--bd-hi);
       color: var(--tx-d0);
       font-family: var(--f-body);
-      font-size: 16px; /* prevent zoom on iOS */
+      font-size: 16px;
       padding: 12px;
       border-radius: 0;
       outline: none;
@@ -620,7 +615,6 @@
 
     .ml-auto { margin-left: auto; }
 
-    /* Task list in modal */
     .task-add-row { display: flex; gap: 8px; margin-bottom: 8px; }
     .task-add-row .f-input { font-size: 14px; }
 
@@ -678,64 +672,439 @@
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* ═══════════ WEEK OVERVIEW ═══════════ */
+    /* ═══════════ WEEK VIEW — NORMALE ÜBERSICHT ═══════════ */
     .week-view { display: none; padding-bottom: calc(var(--bottom-h) + 20px); }
 
-    .week-day-row {
+    .week-day-section {
       border-bottom: 1px solid var(--bd);
     }
 
-    .week-day-header {
+    .week-day-title {
+      padding: 14px 16px 8px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+    }
+
+    .wdt-name {
+      font-family: var(--f-display);
+      font-size: 19px;
+      font-weight: 500;
+      color: var(--tx-d1);
+    }
+
+    .week-day-title.is-today .wdt-name { color: var(--orange); }
+
+    .wdt-today-badge {
+      font-family: var(--f-mono);
+      font-size: 8px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      background: var(--orange-glow);
+      color: var(--orange);
+      padding: 2px 7px;
+    }
+
+    .wdt-count {
+      font-family: var(--f-mono);
+      font-size: 9px;
+      letter-spacing: 0.10em;
+      color: var(--tx-d2);
+      margin-left: auto;
+    }
+
+    .week-day-cards-list {
+      padding: 0 12px 12px;
+    }
+
+    .week-empty {
+      padding: 10px 16px 14px;
+      font-family: var(--f-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--tx-d2);
+    }
+
+    /* ═══════════ MEHR VIEW ═══════════ */
+    .mehr-view { display: none; padding-bottom: calc(var(--bottom-h) + 20px); }
+
+    .mehr-tabs {
+      background: var(--bg-0);
+      border-bottom: 1px solid var(--bd);
+      padding: 0 8px;
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+      position: sticky;
+      top: var(--nav-h);
+      z-index: 180;
+    }
+    .mehr-tabs::-webkit-scrollbar { display: none; }
+
+    .mehr-tab {
+      flex: 0 0 auto;
       padding: 12px 16px 10px;
+      font-family: var(--f-mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--tx-d2);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .mehr-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+    .mehr-body {
+      display: none;
+      padding: 16px;
+    }
+    .mehr-body.active { display: block; }
+
+    .section-eyebrow {
+      font-family: var(--f-mono);
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    /* Tip cards (collapsible) */
+    .tip-card-m {
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      border-left: 3px solid var(--orange);
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+    .tip-card-m.card-info { border-left-color: var(--info); }
+    .tip-card-m.card-ok   { border-left-color: var(--ok); }
+    .tip-card-m.card-warn { border-left-color: var(--warn); }
+
+    .tip-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px;
       cursor: pointer;
       user-select: none;
     }
 
-    .wdh-name {
+    .tip-num {
       font-family: var(--f-mono);
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--tx-d1);
-      min-width: 80px;
+      font-size: 9px;
+      color: var(--tx-d2);
+      letter-spacing: 0.1em;
+      flex-shrink: 0;
     }
-    .wdh-name.is-today { color: var(--orange); }
 
-    .wdh-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
+    .tip-title {
+      font-family: var(--f-body);
+      font-weight: 500;
+      font-size: 15px;
+      color: var(--tx-d0);
       flex: 1;
     }
 
-    .wdh-pill {
-      font-family: var(--f-mono);
-      font-size: 9px;
-      padding: 2px 8px;
-      letter-spacing: 0.06em;
-      border: 1px solid var(--bd);
-      color: var(--tx-d2);
-      white-space: nowrap;
-    }
-    .wdh-pill.type-pflicht  { border-color: var(--orange); color: var(--orange); }
-    .wdh-pill.type-wichtig  { border-color: var(--info); color: var(--info); }
-    .wdh-pill.type-optional { border-color: var(--ok); color: var(--ok); }
-
-    .wdh-chevron {
+    .tip-chevron {
       font-size: 12px;
       color: var(--tx-d2);
       transition: transform 0.2s;
+      flex-shrink: 0;
     }
-    .week-day-row.open .wdh-chevron { transform: rotate(90deg); }
+    .tip-card-m.open .tip-chevron { transform: rotate(90deg); }
 
-    .week-day-cards {
+    .tip-content {
       display: none;
-      padding: 0 12px 12px;
+      padding: 0 14px 14px;
     }
-    .week-day-row.open .week-day-cards { display: block; }
+    .tip-card-m.open .tip-content { display: block; }
+
+    .tip-list-m {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .tip-list-m li {
+      font-family: var(--f-body);
+      font-size: 13px;
+      color: var(--tx-d1);
+      padding-left: 14px;
+      position: relative;
+      line-height: 1.4;
+    }
+    .tip-list-m li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--tx-d2);
+      font-size: 10px;
+      top: 2px;
+    }
+
+    /* Duas */
+    .dua-card-m {
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      padding: 14px;
+      margin-bottom: 8px;
+    }
+    .dua-arabic-m {
+      font-family: var(--f-display);
+      font-size: 13px;
+      font-style: italic;
+      color: var(--orange);
+      margin-bottom: 5px;
+      line-height: 1.6;
+    }
+    .dua-trans-m {
+      font-family: var(--f-body);
+      font-size: 13px;
+      color: var(--tx-d1);
+      margin-bottom: 5px;
+      line-height: 1.4;
+    }
+    .dua-source-m {
+      font-family: var(--f-mono);
+      font-size: 9px;
+      letter-spacing: 0.10em;
+      color: var(--tx-d2);
+    }
+
+    .quote-card-m {
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      border-left: 2px solid var(--orange-dim);
+      padding: 14px;
+      margin-bottom: 8px;
+    }
+    .quote-text-m {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-size: 13px;
+      color: var(--tx-d1);
+      line-height: 1.6;
+      margin-bottom: 5px;
+    }
+    .quote-src-m {
+      font-family: var(--f-mono);
+      font-size: 9px;
+      letter-spacing: 0.10em;
+      color: var(--tx-d2);
+    }
+
+    /* Ernährung */
+    .brain-stack-m {
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      border-left: 3px solid var(--ok);
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+    .brain-stack-title-m {
+      font-family: var(--f-mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--tx-d2);
+      margin-bottom: 10px;
+    }
+    .stack-item-m {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--bd);
+      font-family: var(--f-body);
+      font-size: 13px;
+      color: var(--tx-d1);
+    }
+    .stack-item-m:last-child { border-bottom: none; }
+    .stack-kcal-m { font-family: var(--f-mono); font-size: 10px; color: var(--tx-d2); }
+
+    .food-card-m {
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .food-icon-m { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .food-name-m { font-family: var(--f-body); font-weight: 500; font-size: 14px; color: var(--tx-d0); }
+    .food-kcal-m { font-family: var(--f-mono); font-size: 9px; letter-spacing: 0.08em; color: var(--tx-d2); margin: 3px 0; }
+    .food-desc-m { font-family: var(--f-body); font-size: 12px; color: var(--tx-d1); line-height: 1.4; }
+
+    /* Klausuren */
+    .klausur-card-m {
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      border-left: 3px solid var(--ok);
+      padding: 16px;
+      margin-bottom: 8px;
+      position: relative;
+    }
+    .klausur-card-m.urgent { border-left-color: #ef4444; }
+    .klausur-card-m.warn   { border-left-color: var(--orange); }
+    .klausur-card-m.k-done { opacity: 0.45; }
+
+    .kc-m-countdown {
+      font-family: var(--f-display);
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 1;
+      margin-bottom: 4px;
+      color: var(--ok);
+    }
+    .kc-m-countdown.urgent { color: #ef4444; }
+    .kc-m-countdown.warn   { color: var(--orange); }
+    .kc-m-countdown.done   { color: var(--tx-d2); font-size: 18px; }
+
+    .kc-m-unit {
+      font-family: var(--f-mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--tx-d2);
+      margin-left: 4px;
+    }
+
+    .kc-m-name {
+      font-family: var(--f-body);
+      font-weight: 500;
+      font-size: 15px;
+      color: var(--tx-d0);
+      margin-bottom: 3px;
+    }
+
+    .kc-m-date {
+      font-family: var(--f-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--tx-d2);
+      margin-bottom: 6px;
+    }
+
+    .kc-m-type-badge {
+      font-family: var(--f-mono);
+      font-size: 8px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border: 1px solid var(--bd-hi);
+      color: var(--tx-d2);
+      display: inline-block;
+    }
+
+    .kc-m-notes {
+      font-family: var(--f-body);
+      font-size: 12px;
+      color: var(--tx-d2);
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
+    .kc-m-edit {
+      position: absolute;
+      top: 12px; right: 12px;
+      background: none; border: none;
+      color: var(--tx-d2); font-size: 16px;
+      cursor: pointer; padding: 4px;
+      transition: color 0.15s;
+    }
+    .kc-m-edit:active { color: var(--orange); }
+
+    .add-btn-m {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--bg-2);
+      border: 1px dashed var(--bd-hi);
+      padding: 16px;
+      color: var(--tx-d2);
+      font-family: var(--f-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      width: 100%;
+      transition: border-color 0.15s, color 0.15s;
+      border-radius: 0;
+    }
+    .add-btn-m:active { border-color: var(--orange); color: var(--orange); }
+
+    /* Notizen */
+    .notiz-card-m {
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      padding: 16px;
+      margin-bottom: 8px;
+    }
+    .notiz-header-m {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .notiz-title-m {
+      font-family: var(--f-display);
+      font-size: 16px;
+      color: var(--tx-d0);
+      background: none;
+      border: none;
+      border-bottom: 1px solid transparent;
+      outline: none;
+      flex: 1;
+      padding-bottom: 2px;
+      transition: border-color 0.15s;
+    }
+    .notiz-title-m:focus { border-bottom-color: var(--orange); }
+    .notiz-del-m {
+      background: none; border: none;
+      color: var(--tx-d2); font-size: 18px;
+      cursor: pointer; padding: 4px;
+    }
+    .notiz-body-m {
+      width: 100%;
+      background: var(--bg-3);
+      border: 1px solid var(--bd);
+      color: var(--tx-d1);
+      font-family: var(--f-body);
+      font-size: 16px;
+      padding: 12px;
+      border-radius: 0;
+      outline: none;
+      resize: vertical;
+      min-height: 80px;
+      transition: border-color 0.15s;
+    }
+    .notiz-body-m:focus { border-color: var(--orange); }
+    .notiz-date-m {
+      font-family: var(--f-mono);
+      font-size: 9px;
+      color: var(--tx-d2);
+      letter-spacing: 0.08em;
+      margin-top: 8px;
+    }
+
+    /* Shake animation */
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20% { transform: translateX(-4px); }
+      40% { transform: translateX(4px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+    }
+    .shake { animation: shake 0.3s ease-out; border-color: #ef4444 !important; }
 
     /* ═══════════ ANIMATIONS ═══════════ */
     @keyframes fadeUp {
@@ -760,6 +1129,7 @@
   <div class="nav-actions">
     <button class="icon-btn" onclick="toggleTheme()" title="Theme wechseln">◑</button>
     <button class="icon-btn" onclick="exportData()" title="Exportieren">↓</button>
+    <button class="icon-btn" onclick="resetToDefault()" title="Zurücksetzen">↺</button>
   </div>
 </nav>
 
@@ -787,10 +1157,281 @@
 
   <!-- WEEK OVERVIEW -->
   <div class="week-view" id="week-view"></div>
+
+  <!-- MEHR VIEW -->
+  <div class="mehr-view" id="mehr-view">
+    <!-- Sub-tabs -->
+    <div class="mehr-tabs">
+      <button class="mehr-tab active" id="mt-0" onclick="switchMehrTab(0)">01 Lernen</button>
+      <button class="mehr-tab" id="mt-1" onclick="switchMehrTab(1)">02 Fokus</button>
+      <button class="mehr-tab" id="mt-2" onclick="switchMehrTab(2)">03 Duas</button>
+      <button class="mehr-tab" id="mt-3" onclick="switchMehrTab(3)">04 Ernährung</button>
+      <button class="mehr-tab" id="mt-4" onclick="switchMehrTab(4)">05 Klausuren</button>
+      <button class="mehr-tab" id="mt-5" onclick="switchMehrTab(5)">06 Notizen</button>
+    </div>
+
+    <!-- Tab 0: Lerntechniken -->
+    <div class="mehr-body active" id="mt-body-0">
+      <span class="section-eyebrow">Lerntechniken</span>
+
+      <div class="tip-card-m" onclick="toggleTip(this)">
+        <div class="tip-card-header">
+          <span class="tip-num">01</span>
+          <span class="tip-title">Pomodoro</span>
+          <span class="tip-chevron">›</span>
+        </div>
+        <div class="tip-content">
+          <ul class="tip-list-m">
+            <li>25 Min lernen, 5 Min Pause</li>
+            <li>Nach 4 Runden: 20 Min große Pause</li>
+            <li>Timer sichtbar auf dem Tisch aufstellen</li>
+            <li>Kein Wechseln der Aufgabe während des Blocks</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tip-card-m card-info" onclick="toggleTip(this)">
+        <div class="tip-card-header">
+          <span class="tip-num">02</span>
+          <span class="tip-title">Active Recall</span>
+          <span class="tip-chevron">›</span>
+        </div>
+        <div class="tip-content">
+          <ul class="tip-list-m">
+            <li>Buch zu, dann aus dem Kopf schreiben</li>
+            <li>Fragen stellen statt nur markieren</li>
+            <li>Feynman-Methode: laut erklären als ob du lehrst</li>
+            <li>Eigene Prüfungsfragen formulieren</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tip-card-m card-ok" onclick="toggleTip(this)">
+        <div class="tip-card-header">
+          <span class="tip-num">03</span>
+          <span class="tip-title">Spaced Repetition</span>
+          <span class="tip-chevron">›</span>
+        </div>
+        <div class="tip-content">
+          <ul class="tip-list-m">
+            <li>Anki täglich 10 Min — keine Ausnahmen</li>
+            <li>Wiederholung: 1 / 3 / 7 / 14 Tage</li>
+            <li>Schwächen häufiger testen als Stärken</li>
+            <li>Neue Karten sofort am selben Tag anlegen</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tip-card-m" onclick="toggleTip(this)">
+        <div class="tip-card-header">
+          <span class="tip-num">04</span>
+          <span class="tip-title">Blackout-Blatt</span>
+          <span class="tip-chevron">›</span>
+        </div>
+        <div class="tip-content">
+          <ul class="tip-list-m">
+            <li>Seite ohne Vorlage aus dem Kopf füllen</li>
+            <li>Lücken direkt im Anschluss nachlernen</li>
+            <li>Ideal direkt vor der Klausur</li>
+            <li>Jede Wiederholung verbessert die Dichte</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 1: Fokus & Routine -->
+    <div class="mehr-body" id="mt-body-1">
+      <span class="section-eyebrow">Fokus &amp; Routine</span>
+
+      <div class="tip-card-m card-info" onclick="toggleTip(this)">
+        <div class="tip-card-header">
+          <span class="tip-num">01</span>
+          <span class="tip-title">Deep Work</span>
+          <span class="tip-chevron">›</span>
+        </div>
+        <div class="tip-content">
+          <ul class="tip-list-m">
+            <li>Benachrichtigungen komplett ausschalten</li>
+            <li>Handy in einem anderen Raum weglegen</li>
+            <li>Sauberer Tisch = klarer Kopf</li>
+            <li>Mindestens 90 Min ungestörte Blöcke planen</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tip-card-m card-ok" onclick="toggleTip(this)">
+        <div class="tip-card-header">
+          <span class="tip-num">02</span>
+          <span class="tip-title">Schlaf &amp; Gedächtnis</span>
+          <span class="tip-chevron">›</span>
+        </div>
+        <div class="tip-content">
+          <ul class="tip-list-m">
+            <li>7–8 Stunden Schlaf = besser behalten</li>
+            <li>Stoff festigt sich im Schlaf (Konsolidierung)</li>
+            <li>Kurzes Review direkt vor dem Schlafen</li>
+            <li>Kein Kaffee nach 14:00 Uhr</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tip-card-m" onclick="toggleTip(this)">
+        <div class="tip-card-header">
+          <span class="tip-num">03</span>
+          <span class="tip-title">Optimale Lernzeiten</span>
+          <span class="tip-chevron">›</span>
+        </div>
+        <div class="tip-content">
+          <ul class="tip-list-m">
+            <li>06:00–09:00 — höchste Konzentration</li>
+            <li>Mittag: kurze Pause einplanen (20–30 Min)</li>
+            <li>Abends: kurzes Review, kein neues Material</li>
+            <li>Feste Lernzeit jeden Tag zur gleichen Uhrzeit</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tip-card-m card-warn" onclick="toggleTip(this)">
+        <div class="tip-card-header">
+          <span class="tip-num">04</span>
+          <span class="tip-title">Anti-Prokrastination</span>
+          <span class="tip-chevron">›</span>
+        </div>
+        <div class="tip-content">
+          <ul class="tip-list-m">
+            <li>In 2 Minuten starten — nicht planen, starten</li>
+            <li>Große Aufgabe in kleine Schritte aufteilen</li>
+            <li>Die ersten 5 Minuten sind die schwersten</li>
+            <li>Belohnung nach dem Block festlegen</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Deen & Duas -->
+    <div class="mehr-body" id="mt-body-2">
+      <span class="section-eyebrow">Duas vor dem Lernen</span>
+
+      <div class="dua-card-m">
+        <div class="dua-arabic-m">Rabbi zidni 'ilma</div>
+        <div class="dua-trans-m">„Mein Herr, vermehre mein Wissen."</div>
+        <div class="dua-source-m">Quran 20:114</div>
+      </div>
+      <div class="dua-card-m">
+        <div class="dua-arabic-m">Allahumma la sahla illa ma ja'altahu sahlan</div>
+        <div class="dua-trans-m">„O Allah, nichts ist leicht, außer dem was Du leicht machst."</div>
+        <div class="dua-source-m">Sahih Ibn Hibban 2427</div>
+      </div>
+      <div class="dua-card-m">
+        <div class="dua-arabic-m">Allahumma infa'ni bima 'allamtani</div>
+        <div class="dua-trans-m">„O Allah, lass mich von dem profitieren, was Du mich gelehrt hast."</div>
+        <div class="dua-source-m">Dua der Gelehrten</div>
+      </div>
+      <div class="dua-card-m">
+        <div class="dua-arabic-m">Rabbi-shrah li sadri wa-yassir li amri</div>
+        <div class="dua-trans-m">„Mein Herr, öffne mir meine Brust und erleichtere mir meine Angelegenheit."</div>
+        <div class="dua-source-m">Dua von Musa — Quran 20:25–26</div>
+      </div>
+      <div class="dua-card-m">
+        <div class="dua-arabic-m">Allahumma inni a'udhu bika minal-hammi wal-hazan</div>
+        <div class="dua-trans-m">„O Allah, ich suche Zuflucht bei Dir vor Sorge und Traurigkeit."</div>
+        <div class="dua-source-m">Sahih al-Bukhari 6369</div>
+      </div>
+      <div class="dua-card-m">
+        <div class="dua-arabic-m">Allahumma yassir wala tu'assir</div>
+        <div class="dua-trans-m">„O Allah, erleichtere und erschwere nicht."</div>
+        <div class="dua-source-m">Überliefertes Gebet</div>
+      </div>
+
+      <span class="section-eyebrow" style="margin-top:20px">Weisheiten der Gelehrten</span>
+
+      <div class="quote-card-m">
+        <div class="quote-text-m">„Wer einen Weg geht, auf dem er Wissen sucht, dem macht Allah den Weg zum Paradies leicht."</div>
+        <div class="quote-src-m">— Sahih Muslim 2699</div>
+      </div>
+      <div class="quote-card-m">
+        <div class="quote-text-m">„Die Gelehrten sind die Erben der Propheten."</div>
+        <div class="quote-src-m">— Abu Dawud 3641</div>
+      </div>
+      <div class="quote-card-m">
+        <div class="quote-text-m">„Suche das Wissen von der Wiege bis zur Bahre."</div>
+        <div class="quote-src-m">— Islamische Weisheit</div>
+      </div>
+      <div class="quote-card-m">
+        <div class="quote-text-m">„Das Wissen ist ein Licht, das Allah in das Herz legt, dem Er es gönnt."</div>
+        <div class="quote-src-m">— Imam Malik</div>
+      </div>
+      <div class="quote-card-m">
+        <div class="quote-text-m">„Nutze deine Jugend, bevor das Alter kommt."</div>
+        <div class="quote-src-m">— Imam Ash-Shafi'i</div>
+      </div>
+      <div class="quote-card-m">
+        <div class="quote-text-m">„Wer sich müht, dem wird der Weg erleichtert."</div>
+        <div class="quote-src-m">— Ali ibn Abi Talib</div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Gehirn-Ernährung -->
+    <div class="mehr-body" id="mt-body-3">
+      <span class="section-eyebrow">Brain-Stack</span>
+      <div class="brain-stack-m">
+        <div class="brain-stack-title-m">Vor jeder Lerneinheit</div>
+        <div class="stack-item-m"><span>💧 Wasser</span><span class="stack-kcal-m">500 ml · 0 kcal</span></div>
+        <div class="stack-item-m"><span>🥜 Walnüsse</span><span class="stack-kcal-m">1 Handvoll · 180 kcal</span></div>
+        <div class="stack-item-m"><span>🍌 Banane</span><span class="stack-kcal-m">1 Stück · 90 kcal</span></div>
+        <div class="stack-item-m"><span>🍵 Grüner Tee</span><span class="stack-kcal-m">1 Tasse · 0 kcal</span></div>
+        <div class="stack-item-m" style="color:var(--ok)"><span>Gesamt</span><span class="stack-kcal-m" style="color:var(--ok)">~350 kcal</span></div>
+      </div>
+
+      <span class="section-eyebrow">Gehirn-Lebensmittel</span>
+      <div class="food-card-m">
+        <span class="food-icon-m">🥜</span>
+        <div><div class="food-name-m">Walnüsse</div><div class="food-kcal-m">1 Handvoll · 180 kcal</div><div class="food-desc-m">Omega-3 für Gehirnfunktion. Vitamin E und Magnesium stärken die Konzentration.</div></div>
+      </div>
+      <div class="food-card-m">
+        <span class="food-icon-m">🫐</span>
+        <div><div class="food-name-m">Blaubeeren</div><div class="food-kcal-m">150 g · ca. 85 kcal</div><div class="food-desc-m">Stärken das Gedächtnis nachweislich. Reich an Antioxidantien.</div></div>
+      </div>
+      <div class="food-card-m">
+        <span class="food-icon-m">🍌</span>
+        <div><div class="food-name-m">Banane</div><div class="food-kcal-m">1 Stück · 90 kcal</div><div class="food-desc-m">Schnelle natürliche Energie. Vitamin B6 fördert Serotonin. 30 Min vor dem Lernen.</div></div>
+      </div>
+      <div class="food-card-m">
+        <span class="food-icon-m">🍫</span>
+        <div><div class="food-name-m">Dunkle Schokolade</div><div class="food-kcal-m">2–3 Stücke · ca. 80 kcal</div><div class="food-desc-m">Flavonoide verbessern Hirndurchblutung. Mindestens 70% Kakao.</div></div>
+      </div>
+      <div class="food-card-m">
+        <span class="food-icon-m">🍵</span>
+        <div><div class="food-name-m">Grüner Tee</div><div class="food-kcal-m">1–2 Tassen · 0 kcal</div><div class="food-desc-m">L-Theanin + Koffein = ruhige Energie ohne Crash. Vor 14:00 Uhr trinken.</div></div>
+      </div>
+      <div class="food-card-m">
+        <span class="food-icon-m">☕</span>
+        <div><div class="food-name-m">Kaffee</div><div class="food-kcal-m">Max. 1–2 Tassen</div><div class="food-desc-m">Nicht nach 14:00 Uhr — Schlaf leidet erheblich. Mit Maß genießen.</div></div>
+      </div>
+      <div class="food-card-m" style="border-left:2px solid rgba(239,68,68,0.4)">
+        <span class="food-icon-m">⚡</span>
+        <div><div class="food-name-m" style="color:#ef4444">Vermeiden</div><div class="food-kcal-m">Energieräuber</div><div class="food-desc-m">Zucker &amp; Fast Food verlangsamen das Denken. Energydrinks enden im Crash.</div></div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Klausuren -->
+    <div class="mehr-body" id="mt-body-4">
+      <span class="section-eyebrow">Prüfungstermine &amp; Deadlines</span>
+      <div id="klausuren-list"></div>
+      <button class="add-btn-m" onclick="openKlausurAdd()"><span style="font-size:18px">+</span> Prüfung hinzufügen</button>
+    </div>
+
+    <!-- Tab 5: Notizen -->
+    <div class="mehr-body" id="mt-body-5">
+      <span class="section-eyebrow">Persönliche Notizen</span>
+      <div id="notizen-list"></div>
+      <button class="add-btn-m" onclick="addNotiz()"><span style="font-size:18px">+</span> Neue Notiz</button>
+    </div>
+  </div>
 </main>
 
 <!-- FAB -->
-<button class="fab" onclick="openAdd()">+</button>
+<button class="fab" id="fab-btn" onclick="openAdd()">+</button>
 
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
@@ -802,12 +1443,16 @@
     <span class="bn-icon">⊞</span>
     <span>Woche</span>
   </button>
+  <button class="bn-item" id="bn-mehr" onclick="showMehr()">
+    <span class="bn-icon">⋮</span>
+    <span>Mehr</span>
+  </button>
 </nav>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- MODAL -->
+<!-- KURS MODAL -->
 <div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
   <div class="modal" id="modal">
     <div class="modal-drag-handle"></div>
@@ -890,6 +1535,64 @@
   </div>
 </div>
 
+<!-- KLAUSUR MODAL -->
+<div class="overlay" id="overlay-k" onclick="if(event.target===this)closeKlausurModal()">
+  <div class="modal" id="modal-k">
+    <div class="modal-drag-handle"></div>
+    <div class="modal-header">
+      <div>
+        <div class="modal-eyebrow" id="km-eyebrow">Neue Prüfung</div>
+        <h2 class="modal-title" id="km-title">Prüfung hinzufügen</h2>
+      </div>
+      <button class="modal-close" onclick="closeKlausurModal()">✕</button>
+    </div>
+
+    <div class="form-group">
+      <label class="f-label">Fach / Titel *</label>
+      <input class="f-input" id="km-name" type="text" placeholder="z.B. Analysis Klausur">
+    </div>
+
+    <div class="form-row-2 form-group">
+      <div>
+        <label class="f-label">Datum *</label>
+        <input class="f-input" id="km-date" type="date">
+      </div>
+      <div>
+        <label class="f-label">Uhrzeit</label>
+        <input class="f-input" id="km-time" type="time">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="f-label">Art</label>
+      <select class="f-select" id="km-type">
+        <option value="klausur">Klausur</option>
+        <option value="test">Test / Testat</option>
+        <option value="abgabe">Abgabe</option>
+        <option value="praesentation">Präsentation</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="f-label">Raum / Ort</label>
+      <input class="f-input" id="km-room" type="text" placeholder="z.B. Aula H">
+    </div>
+
+    <div class="form-group">
+      <label class="f-label">Notizen</label>
+      <textarea class="f-textarea" id="km-notes" placeholder="Erlaubte Hilfsmittel, Themen …" style="min-height:60px"></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-delete" id="km-del" onclick="deleteKlausur()" style="display:none">Löschen</button>
+      <div class="ml-auto" style="display:flex;gap:8px">
+        <button class="btn btn-ghost" onclick="closeKlausurModal()">Abbrechen</button>
+        <button class="btn btn-primary" onclick="saveKlausur()">Speichern</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════
 // CONFIG
@@ -915,13 +1618,21 @@ const DEFAULTS = [
 // ═══════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════
-let courses = loadCourses();
-let nextId  = Math.max(0, ...courses.map(c => c.id)) + 1;
-let editId  = null;
-let activeDay = null;
+let courses    = loadCourses();
+let nextId     = Math.max(0, ...courses.map(c => c.id)) + 1;
+let editId     = null;
+let activeDay  = null;
 let modalTasks = [];
 let taskNextId = 1;
-let currentView = 'day'; // 'day' | 'week'
+let currentView = 'day'; // 'day' | 'week' | 'mehr'
+let activeMehrTab = 0;
+
+let klausuren = loadKlausuren();
+let kNextId   = Math.max(0, ...klausuren.map(k => k.id), 0) + 1;
+let kEditId   = null;
+
+let notizen   = loadNotizen();
+let nNextId   = Math.max(0, ...notizen.map(n => n.id), 0) + 1;
 
 function loadCourses() {
   try {
@@ -931,7 +1642,19 @@ function loadCourses() {
   } catch { return deepClone(DEFAULTS); }
 }
 
-function persist() { localStorage.setItem('syn-stundenplan-v2', JSON.stringify(courses)); }
+function loadKlausuren() {
+  try { return JSON.parse(localStorage.getItem('syn-klausuren') || '[]'); }
+  catch { return []; }
+}
+
+function loadNotizen() {
+  try { return JSON.parse(localStorage.getItem('syn-notizen') || '[]'); }
+  catch { return []; }
+}
+
+function persist()  { localStorage.setItem('syn-stundenplan-v2', JSON.stringify(courses)); }
+function persistK() { localStorage.setItem('syn-klausuren',      JSON.stringify(klausuren)); }
+function persistN() { localStorage.setItem('syn-notizen',        JSON.stringify(notizen)); }
 function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
 
 // ═══════════════════════════════════════════
@@ -977,7 +1700,6 @@ function init() {
   updateClock();
   setInterval(updateClock, 10000);
 
-  // Theme
   const saved = localStorage.getItem('syn-theme') || 'dark';
   document.documentElement.dataset.theme = saved;
 }
@@ -1003,18 +1725,12 @@ function buildDayStrip() {
 
 function switchDay(day) {
   activeDay = day;
-  // update tabs
   DAYS.forEach(d => {
     const tab = document.getElementById(`tab-${d}`);
-    if (tab) {
-      tab.classList.toggle('active', d === day);
-    }
+    if (tab) tab.classList.toggle('active', d === day);
   });
   renderDayView(day);
-  // show day view if in week
-  if (currentView === 'week') {
-    showDayView();
-  }
+  if (currentView !== 'day') showDayView();
 }
 
 // ═══════════════════════════════════════════
@@ -1025,7 +1741,6 @@ function renderDayView(day) {
   const curMin = nowMin();
   const isToday = day === today;
 
-  // Header
   document.getElementById('day-header-name').textContent = DAY_FULL[day];
   const metaEl = document.getElementById('day-header-meta');
   if (isToday) {
@@ -1036,10 +1751,8 @@ function renderDayView(day) {
     metaEl.className = 'day-header-meta';
   }
 
-  // Clock bar only on today
   document.getElementById('time-bar').style.display = isToday ? 'block' : 'none';
 
-  // Cards
   const dayCourses = courses
     .filter(c => c.day === day)
     .sort((a,b) => toMin(a.start) - toMin(b.start));
@@ -1090,51 +1803,65 @@ function renderDayView(day) {
 }
 
 // ═══════════════════════════════════════════
-// WEEK VIEW
+// WEEK VIEW — NORMALE ÜBERSICHT
 // ═══════════════════════════════════════════
 function buildWeekView() {
-  const today = todayKey();
+  const today  = todayKey();
+  const curMin = nowMin();
   const el = document.getElementById('week-view');
+
   el.innerHTML = DAYS.map(d => {
+    const isToday = d === today;
     const dayCourses = courses
       .filter(c => c.day === d)
       .sort((a,b) => toMin(a.start) - toMin(b.start));
-    const isToday = d === today ? ' is-today' : '';
-    const pills = dayCourses.map(c =>
-      `<span class="wdh-pill type-${c.type}">${escHtml(c.name.split(' ')[0])}</span>`
-    ).join('');
-    const cards = dayCourses.map(c => {
-      const openTasks = (c.tasks || []).filter(t => !t.done).length;
-      const badge = openTasks > 0 ? `<span class="cc-task-badge" style="font-size:8px;padding:1px 5px">${openTasks}</span>` : '';
-      return `
-        <div class="course-card type-${c.type}" onclick="openEdit(${c.id})" style="margin-bottom:8px">
-          <div class="cc-top">
-            <span class="cc-time">${c.start} – ${c.end}</span>
-            <span class="cc-badge type-${c.type}">${c.type}</span>
-          </div>
-          <div class="cc-name" style="font-size:14px">${escHtml(c.name)}</div>
-          <div class="cc-details">
-            ${c.room ? `<div class="cc-detail-item cc-room type-${c.type}" style="font-size:10px"><span class="cc-detail-icon">⊙</span>${escHtml(c.room)}</div>` : ''}
-          </div>
-          ${badge ? `<div class="cc-duration">${badge}</div>` : ''}
-        </div>`;
-    }).join('');
+
+    const todayBadge = isToday ? '<span class="wdt-today-badge">Heute</span>' : '';
+    const count = dayCourses.length;
+    const countStr = count === 0 ? 'Keine Kurse' : `${count} Kurs${count !== 1 ? 'e' : ''}`;
+
+    const cardsHtml = dayCourses.length === 0
+      ? `<div class="week-empty">Keine Kurse</div>`
+      : dayCourses.map((c, i) => {
+          const startM = toMin(c.start);
+          const endM   = toMin(c.end);
+          const isNow  = isToday && curMin >= startM && curMin < endM;
+          const isDone = isToday && curMin >= endM;
+          const openTasks = (c.tasks || []).filter(t => !t.done).length;
+
+          let classes = `course-card type-${c.type}`;
+          if (isNow)  classes += ' is-now';
+          if (isDone) classes += ' is-done';
+
+          const badge = openTasks > 0 ? `<span class="cc-task-badge">${openTasks}</span>` : '';
+          const nowPill = isNow ? `<div class="now-pill">Jetzt</div>` : '';
+
+          return `
+            <div class="${classes}" style="animation-delay:${i*0.04}s;margin-bottom:8px" onclick="openEdit(${c.id})">
+              ${nowPill}
+              <div class="cc-top">
+                <span class="cc-time">${c.start} – ${c.end}</span>
+                <span class="cc-badge type-${c.type}">${c.type}</span>
+              </div>
+              <div class="cc-name" style="font-size:15px">${escHtml(c.name)}</div>
+              <div class="cc-details">
+                ${c.room ? `<div class="cc-detail-item cc-room type-${c.type}" style="font-size:10px"><span class="cc-detail-icon">⊙</span>${escHtml(c.room)}</div>` : ''}
+                ${c.prof ? `<div class="cc-detail-item cc-prof" style="font-size:10px"><span class="cc-detail-icon">◎</span>${escHtml(c.prof)}</div>` : ''}
+              </div>
+              ${badge ? `<div class="cc-duration"><span>${durationStr(c.start, c.end)}</span>${badge}</div>` : ''}
+            </div>`;
+        }).join('');
 
     return `
-      <div class="week-day-row" id="wr-${d}">
-        <div class="week-day-header" onclick="toggleWeekRow('${d}')">
-          <span class="wdh-name${isToday}">${DAY_FULL[d]}</span>
-          <div class="wdh-pills">${pills || '<span style="font-family:var(--f-mono);font-size:9px;color:var(--tx-d2);letter-spacing:.1em">Keine</span>'}</div>
-          <span class="wdh-chevron">›</span>
+      <div class="week-day-section">
+        <div class="week-day-title${isToday ? ' is-today' : ''}">
+          <span class="wdt-name">${DAY_FULL[d]}</span>
+          ${todayBadge}
+          <span class="wdt-count">${countStr}</span>
         </div>
-        <div class="week-day-cards">${cards}</div>
+        <div class="week-day-cards-list">${cardsHtml}</div>
       </div>`;
   }).join('');
-}
-
-function toggleWeekRow(day) {
-  const row = document.getElementById(`wr-${day}`);
-  row.classList.toggle('open');
 }
 
 // ═══════════════════════════════════════════
@@ -1144,32 +1871,68 @@ function showToday() {
   currentView = 'day';
   document.getElementById('bn-heute').classList.add('active');
   document.getElementById('bn-woche').classList.remove('active');
+  document.getElementById('bn-mehr').classList.remove('active');
   document.getElementById('day-view').style.display = 'block';
   document.getElementById('week-view').style.display = 'none';
+  document.getElementById('mehr-view').style.display = 'none';
   document.getElementById('day-strip').style.display = 'flex';
+  document.getElementById('fab-btn').style.display = 'flex';
   const today = todayKey();
   const target = DAYS.includes(today) ? today : 'Mo';
-  switchDay(target);
+  activeDay = target;
+  buildDayStrip();
+  renderDayView(target);
 }
 
 function showDayView() {
   currentView = 'day';
   document.getElementById('bn-heute').classList.add('active');
   document.getElementById('bn-woche').classList.remove('active');
+  document.getElementById('bn-mehr').classList.remove('active');
   document.getElementById('day-view').style.display = 'block';
   document.getElementById('week-view').style.display = 'none';
+  document.getElementById('mehr-view').style.display = 'none';
   document.getElementById('day-strip').style.display = 'flex';
+  document.getElementById('fab-btn').style.display = 'flex';
 }
 
 function showWeek() {
   currentView = 'week';
   document.getElementById('bn-heute').classList.remove('active');
   document.getElementById('bn-woche').classList.add('active');
+  document.getElementById('bn-mehr').classList.remove('active');
   document.getElementById('day-view').style.display = 'none';
   document.getElementById('week-view').style.display = 'block';
+  document.getElementById('mehr-view').style.display = 'none';
   document.getElementById('day-strip').style.display = 'none';
   document.getElementById('time-bar').style.display = 'none';
+  document.getElementById('fab-btn').style.display = 'flex';
   buildWeekView();
+}
+
+function showMehr() {
+  currentView = 'mehr';
+  document.getElementById('bn-heute').classList.remove('active');
+  document.getElementById('bn-woche').classList.remove('active');
+  document.getElementById('bn-mehr').classList.add('active');
+  document.getElementById('day-view').style.display = 'none';
+  document.getElementById('week-view').style.display = 'none';
+  document.getElementById('mehr-view').style.display = 'block';
+  document.getElementById('day-strip').style.display = 'none';
+  document.getElementById('time-bar').style.display = 'none';
+  document.getElementById('fab-btn').style.display = 'none';
+  if (activeMehrTab === 4) buildKlausuren();
+  if (activeMehrTab === 5) buildNotizen();
+}
+
+function switchMehrTab(idx) {
+  activeMehrTab = idx;
+  for (let i = 0; i < 6; i++) {
+    document.getElementById(`mt-${i}`).classList.toggle('active', i === idx);
+    document.getElementById(`mt-body-${i}`).classList.toggle('active', i === idx);
+  }
+  if (idx === 4) buildKlausuren();
+  if (idx === 5) buildNotizen();
 }
 
 // ═══════════════════════════════════════════
@@ -1189,7 +1952,7 @@ function updateClock() {
 }
 
 // ═══════════════════════════════════════════
-// MODAL
+// MODAL — KURS
 // ═══════════════════════════════════════════
 function openAdd() {
   editId = null;
@@ -1249,7 +2012,11 @@ function saveCourse() {
   const day   = document.getElementById('f-day').value;
   const start = document.getElementById('f-start').value;
   const end   = document.getElementById('f-end').value;
-  if (!name || !day || !start || !end) { showToast('Pflichtfelder ausfüllen!'); return; }
+
+  if (!name)  { shake('f-name');  showToast('Kursname eingeben!'); return; }
+  if (!start) { shake('f-start'); showToast('Startzeit eingeben!'); return; }
+  if (!end)   { shake('f-end');   showToast('Endzeit eingeben!'); return; }
+  if (toMin(end) <= toMin(start)) { shake('f-end'); showToast('Ende muss nach Beginn liegen'); return; }
 
   const obj = {
     name, day, start, end,
@@ -1272,20 +2039,32 @@ function saveCourse() {
   closeModal();
   buildDayStrip();
   if (currentView === 'day') renderDayView(activeDay);
-  else buildWeekView();
+  else if (currentView === 'week') buildWeekView();
   showToast(editId ? 'Gespeichert' : 'Kurs hinzugefügt');
 }
 
 function deleteCourse() {
   if (!editId) return;
-  if (!confirm('Kurs löschen?')) return;
+  const name = courses.find(c => c.id === editId)?.name || 'Kurs';
+  if (!confirm(`"${name}" löschen?`)) return;
   courses = courses.filter(c => c.id !== editId);
   persist();
   closeModal();
   buildDayStrip();
   if (currentView === 'day') renderDayView(activeDay);
-  else buildWeekView();
+  else if (currentView === 'week') buildWeekView();
   showToast('Kurs gelöscht');
+}
+
+function resetToDefault() {
+  if (!confirm('Alle Änderungen zurücksetzen? Der Original-Stundenplan wird wiederhergestellt.')) return;
+  courses = deepClone(DEFAULTS);
+  nextId  = Math.max(...courses.map(c => c.id)) + 1;
+  persist();
+  buildDayStrip();
+  if (currentView === 'day') renderDayView(activeDay);
+  else if (currentView === 'week') buildWeekView();
+  showToast('Stundenplan zurückgesetzt');
 }
 
 // ═══════════════════════════════════════════
@@ -1324,6 +2103,189 @@ function renderTaskList() {
 }
 
 // ═══════════════════════════════════════════
+// KLAUSUREN
+// ═══════════════════════════════════════════
+function buildKlausuren() {
+  const el = document.getElementById('klausuren-list');
+  if (!el) return;
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const sorted = [...klausuren].sort((a,b) => new Date(a.date) - new Date(b.date));
+  const typeLabels = { klausur:'Klausur', test:'Test / Testat', abgabe:'Abgabe', praesentation:'Präsentation' };
+
+  if (sorted.length === 0) {
+    el.innerHTML = `<div class="week-empty" style="padding:20px 0">Noch keine Prüfungen eingetragen.</div>`;
+    return;
+  }
+
+  el.innerHTML = sorted.map(k => {
+    const d    = new Date(k.date); d.setHours(0,0,0,0);
+    const diff = Math.round((d - today) / 86400000);
+    const done = diff < 0;
+    const urgent = !done && diff <= 7;
+    const warn   = !done && diff <= 14 && !urgent;
+
+    let cntClass = done ? 'done' : urgent ? 'urgent' : warn ? 'warn' : '';
+    let cardClass = done ? 'k-done' : urgent ? 'urgent' : warn ? 'warn' : '';
+
+    const cntText = done
+      ? `<div class="kc-m-countdown done">✓<span class="kc-m-unit">vorbei</span></div>`
+      : diff === 0
+        ? `<div class="kc-m-countdown urgent">Heute</div>`
+        : `<div class="kc-m-countdown ${cntClass}">${diff}<span class="kc-m-unit">Tage</span></div>`;
+
+    const dateStr = new Date(k.date).toLocaleDateString('de-DE', {weekday:'short', day:'2-digit', month:'2-digit', year:'numeric'});
+    const timeStr = k.time ? ` · ${k.time} Uhr` : '';
+
+    return `
+      <div class="klausur-card-m ${cardClass}">
+        <button class="kc-m-edit" onclick="openKlausurEdit(${k.id})">✏</button>
+        ${cntText}
+        <div class="kc-m-name">${escHtml(k.name)}</div>
+        <div class="kc-m-date">${dateStr}${timeStr}${k.room ? ' · ' + escHtml(k.room) : ''}</div>
+        <span class="kc-m-type-badge">${typeLabels[k.type] || k.type}</span>
+        ${k.notes ? `<div class="kc-m-notes">${escHtml(k.notes)}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+function openKlausurAdd() {
+  kEditId = null;
+  document.getElementById('km-eyebrow').textContent = 'Neue Prüfung';
+  document.getElementById('km-title').textContent = 'Prüfung hinzufügen';
+  document.getElementById('km-name').value  = '';
+  document.getElementById('km-date').value  = '';
+  document.getElementById('km-time').value  = '';
+  document.getElementById('km-type').value  = 'klausur';
+  document.getElementById('km-room').value  = '';
+  document.getElementById('km-notes').value = '';
+  document.getElementById('km-del').style.display = 'none';
+  document.getElementById('overlay-k').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function openKlausurEdit(id) {
+  const k = klausuren.find(x => x.id === id);
+  if (!k) return;
+  kEditId = id;
+  document.getElementById('km-eyebrow').textContent = 'Prüfung bearbeiten';
+  document.getElementById('km-title').textContent = k.name;
+  document.getElementById('km-name').value  = k.name;
+  document.getElementById('km-date').value  = k.date;
+  document.getElementById('km-time').value  = k.time || '';
+  document.getElementById('km-type').value  = k.type;
+  document.getElementById('km-room').value  = k.room || '';
+  document.getElementById('km-notes').value = k.notes || '';
+  document.getElementById('km-del').style.display = 'inline-flex';
+  document.getElementById('overlay-k').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeKlausurModal() {
+  document.getElementById('overlay-k').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function saveKlausur() {
+  const name = document.getElementById('km-name').value.trim();
+  const date = document.getElementById('km-date').value;
+  if (!name) { shake('km-name'); showToast('Fach eingeben!'); return; }
+  if (!date) { shake('km-date'); showToast('Datum eingeben!'); return; }
+
+  const data = {
+    name, date,
+    time:  document.getElementById('km-time').value,
+    type:  document.getElementById('km-type').value,
+    room:  document.getElementById('km-room').value.trim(),
+    notes: document.getElementById('km-notes').value.trim(),
+  };
+
+  if (kEditId !== null) {
+    const idx = klausuren.findIndex(k => k.id === kEditId);
+    if (idx > -1) klausuren[idx] = { ...klausuren[idx], ...data };
+    showToast('Prüfung aktualisiert');
+  } else {
+    klausuren.push({ id: kNextId++, ...data });
+    showToast('Prüfung hinzugefügt');
+  }
+
+  persistK();
+  buildKlausuren();
+  closeKlausurModal();
+}
+
+function deleteKlausur() {
+  if (kEditId === null) return;
+  if (!confirm('Prüfung löschen?')) return;
+  klausuren = klausuren.filter(k => k.id !== kEditId);
+  persistK();
+  buildKlausuren();
+  closeKlausurModal();
+  showToast('Prüfung gelöscht');
+}
+
+// ═══════════════════════════════════════════
+// NOTIZEN
+// ═══════════════════════════════════════════
+function buildNotizen() {
+  const el = document.getElementById('notizen-list');
+  if (!el) return;
+
+  if (notizen.length === 0) {
+    el.innerHTML = `<div class="week-empty" style="padding:20px 0">Noch keine Notizen vorhanden.</div>`;
+    return;
+  }
+
+  el.innerHTML = notizen.map(n => `
+    <div class="notiz-card-m">
+      <div class="notiz-header-m">
+        <input class="notiz-title-m" value="${escHtml(n.title)}" placeholder="Titel …"
+               oninput="updateNotizTitle(${n.id}, this.value)">
+        <button class="notiz-del-m" onclick="deleteNotiz(${n.id})">✕</button>
+      </div>
+      <textarea class="notiz-body-m" placeholder="Notiz eingeben …"
+                oninput="updateNotizBody(${n.id}, this.value)">${escHtml(n.body)}</textarea>
+      <div class="notiz-date-m">${new Date(n.updated).toLocaleDateString('de-DE', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
+    </div>`).join('');
+}
+
+function addNotiz() {
+  const n = { id: nNextId++, title: '', body: '', updated: Date.now() };
+  notizen.unshift(n);
+  persistN();
+  buildNotizen();
+  setTimeout(() => {
+    const first = document.querySelector('.notiz-title-m');
+    if (first) first.focus();
+  }, 50);
+}
+
+function updateNotizTitle(id, val) {
+  const n = notizen.find(x => x.id === id);
+  if (n) { n.title = val; n.updated = Date.now(); persistN(); }
+}
+
+function updateNotizBody(id, val) {
+  const n = notizen.find(x => x.id === id);
+  if (n) { n.body = val; n.updated = Date.now(); persistN(); }
+}
+
+function deleteNotiz(id) {
+  if (!confirm('Notiz löschen?')) return;
+  notizen = notizen.filter(x => x.id !== id);
+  persistN();
+  buildNotizen();
+  showToast('Notiz gelöscht');
+}
+
+// ═══════════════════════════════════════════
+// TIP CARDS (collapsible)
+// ═══════════════════════════════════════════
+function toggleTip(card) {
+  card.classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════
 // TOAST
 // ═══════════════════════════════════════════
 let toastTimer;
@@ -1333,6 +2295,18 @@ function showToast(msg) {
   el.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ═══════════════════════════════════════════
+// SHAKE
+// ═══════════════════════════════════════════
+function shake(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('shake');
+  void el.offsetWidth; // reflow
+  el.classList.add('shake');
+  setTimeout(() => el.classList.remove('shake'), 400);
 }
 
 // ═══════════════════════════════════════════
@@ -1349,7 +2323,7 @@ function toggleTheme() {
 // EXPORT
 // ═══════════════════════════════════════════
 function exportData() {
-  const data = JSON.stringify(courses, null, 2);
+  const data = JSON.stringify({ courses, klausuren, notizen }, null, 2);
   const blob = new Blob([data], { type: 'application/json' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
@@ -1360,7 +2334,9 @@ function exportData() {
   showToast('Export gespeichert');
 }
 
-// Swipe between days
+// ═══════════════════════════════════════════
+// SWIPE (tag wechseln)
+// ═══════════════════════════════════════════
 let touchStartX = 0;
 document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
 document.addEventListener('touchend', e => {
