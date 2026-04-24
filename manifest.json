@@ -1,12 +1,12 @@
 {
-  "name": "Stundenplan SoSe 2026",
-  "short_name": "Stundenplan",
+  "name": "Lernplan SoSe 2026",
+  "short_name": "Lernplan",
   "description": "Melih Doenmez · H-BRS · Bachelor Wirtschaftsinformatik",
-  "start_url": "/Stundenplan/stundenplan-mobile.html",
+  "start_url": "/Stundenplan/stundenplan.html",
   "scope": "/Stundenplan/",
   "display": "standalone",
-  "background_color": "#131311",
-  "theme_color": "#131311",
+  "background_color": "#0C0A14",
+  "theme_color": "#7C3AED",
   "orientation": "portrait-primary",
   "lang": "de",
   "icons": [
