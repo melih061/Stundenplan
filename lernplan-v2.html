@@ -433,6 +433,95 @@
 
     /* ══════ GLOW LINE ══════ */
     .glow-line { height: 1px; background: linear-gradient(90deg, transparent, var(--violet), transparent); opacity: 0.35; border: none; margin: 28px 0; }
+
+    /* ══════ DARK MODE ══════ */
+    [data-theme="dark"] {
+      --bg-0: #0C0A14; --bg-1: #12101C; --bg-2: #1A1726; --bg-3: #221F30; --bg-4: #2C293C;
+      --tx-0: #F5F3FF; --tx-1: #C4C0E0; --tx-2: #8580A0; --tx-3: #504C6A;
+      --bd: rgba(255,255,255,0.07); --bd-hi: rgba(255,255,255,0.13);
+    }
+    [data-theme="dark"] .tab-strip { background: var(--bg-1); }
+    [data-theme="dark"] .tab-btn { color: var(--tx-2); }
+    [data-theme="dark"] .tab-btn.active { color: var(--violet-mid); border-bottom-color: var(--violet-mid); }
+    .theme-btn {
+      background: none; border: 1px solid rgba(255,255,255,0.15); color: var(--tx-inv1);
+      cursor: pointer; padding: 5px 12px; font-family: var(--f-mono); font-size: 10px;
+      letter-spacing: 0.10em; text-transform: uppercase; transition: all 150ms ease; flex-shrink: 0;
+    }
+    .theme-btn:hover { border-color: var(--violet-mid); color: var(--violet-mid); }
+
+    /* ══════ PROGRESS TRACKER ══════ */
+    .prog-score {
+      background: var(--bg-dark); border: 1px solid var(--violet-line);
+      padding: 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 20px;
+    }
+    .prog-score-num {
+      font-family: var(--f-display); font-size: 56px; font-weight: 600;
+      background: linear-gradient(135deg, var(--violet-mid) 0%, var(--violet) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; min-width: 80px;
+    }
+    .prog-score-body { flex: 1; }
+    .prog-score-label { font-family: var(--f-mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--tx-inv1); }
+    .prog-score-sub { font-size: 13px; color: var(--tx-inv1); margin-top: 3px; }
+    .prog-score-bar { width: 100%; height: 3px; background: var(--bg-dark3); margin-top: 10px; }
+    .prog-score-fill { height: 100%; background: linear-gradient(90deg, var(--violet-deep), var(--violet-mid)); transition: width 0.6s; }
+    .mod-card { background: var(--bg-1); border: 1px solid var(--bd); padding: 16px; margin-bottom: 8px; }
+    .mod-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; cursor: pointer; user-select: none; }
+    .mod-card-name { font-family: var(--f-display); font-size: 16px; font-weight: 500; color: var(--tx-0); }
+    .mod-pct { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.10em; }
+    .mod-bar-wrap { height: 2px; background: var(--bg-3); }
+    .mod-bar-fill { height: 100%; transition: width 0.4s ease; }
+    .mod-topics { display: none; margin-top: 12px; }
+    .mod-topics.open { display: block; }
+    .topic-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--bd); cursor: pointer; }
+    .topic-row:last-child { border-bottom: none; }
+    .topic-check { width: 16px; height: 16px; border: 1px solid var(--bd-hi); background: var(--bg-2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+    .topic-check.done { background: var(--violet); border-color: var(--violet); color: #fff; }
+    .topic-label { font-size: 13px; color: var(--tx-1); flex: 1; }
+    .topic-label.done { color: var(--tx-2); text-decoration: line-through; }
+    .mod-chevron { font-size: 14px; color: var(--tx-2); transition: transform 0.2s; }
+    .mod-chevron.open { transform: rotate(90deg); }
+
+    /* ══════ EINSTELLUNGEN / BACKUP ══════ */
+    .settings-block { background: var(--bg-1); border: 1px solid var(--bd); padding: 20px; margin-bottom: 8px; }
+    .settings-block-title {
+      font-family: var(--f-mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--violet); margin-bottom: 12px; display: flex; align-items: center; gap: 12px;
+    }
+    .settings-block-title::after { content:''; flex:1; height:1px; background: linear-gradient(90deg, var(--violet-line), transparent); }
+    .settings-desc { font-size: 13px; color: var(--tx-1); line-height: 1.65; margin-bottom: 14px; }
+    .s-row { display: flex; gap: 8px; margin-bottom: 8px; }
+    .s-input {
+      flex: 1; background: var(--bg-2); border: 1px solid var(--bd-hi); color: var(--tx-0);
+      font-family: var(--f-mono); font-size: 12px; padding: 10px 12px; outline: none;
+    }
+    .s-input:focus { border-color: var(--violet); }
+    .s-btn {
+      background: var(--bg-2); border: 1px solid var(--bd-hi); color: var(--tx-0);
+      font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.08em;
+      padding: 10px 16px; cursor: pointer; white-space: nowrap; transition: all 0.15s;
+    }
+    .s-btn:hover { border-color: var(--violet); color: var(--violet); }
+    .s-btn-full {
+      width: 100%; background: var(--bg-2); border: 1px solid var(--bd-hi); color: var(--tx-0);
+      font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.08em; padding: 12px;
+      cursor: pointer; text-align: center; transition: all 0.15s; margin-bottom: 8px; display: block;
+    }
+    .s-btn-full:hover { border-color: var(--violet); color: var(--violet); }
+    .s-btn-full.accent { background: var(--violet-glow); border-color: var(--violet-line); color: var(--violet); }
+    .s-status { font-family: var(--f-mono); font-size: 10px; color: var(--tx-2); margin-top: 10px; line-height: 1.8; }
+    .backup-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--f-mono); font-size: 9px; letter-spacing: 0.10em;
+      border: 1px solid var(--bd-hi); padding: 3px 10px; color: var(--tx-2);
+    }
+    .backup-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--tx-3); }
+    .backup-pill .dot.ok  { background: #16A34A; }
+    .backup-pill .dot.err { background: #DC2626; }
+    .backup-pill .dot.spin { background: var(--violet); animation: blink 1s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    #gcal-links a { display:block; padding:8px 12px; margin-bottom:4px; background:var(--bg-2); color:var(--tx-0); text-decoration:none; font-family:var(--f-mono); font-size:11px; border:1px solid var(--bd); }
+    #gcal-links a:hover { border-color:var(--violet); color:var(--violet); }
   </style>
 </head>
 <body>
@@ -464,6 +553,10 @@
       <span class="topbar-subtitle">Melih · WiInf 4. Sem · SoSe 2026</span>
     </div>
   </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="backup-pill" id="backup-pill"><div class="dot" id="backup-dot"></div><span id="backup-text">—</span></div>
+    <button class="theme-btn" onclick="toggleTheme()">◑ Modus</button>
+  </div>
 </nav>
 
 <!-- ══════ TABS ══════ -->
@@ -474,6 +567,8 @@
   <button class="tab-btn" onclick="switchTab(3)">Module</button>
   <button class="tab-btn" onclick="switchTab(4)">Klausurphase</button>
   <button class="tab-btn" onclick="switchTab(5)">Goldene Regeln</button>
+  <button class="tab-btn" onclick="switchTab(6)">Fortschritt</button>
+  <button class="tab-btn" onclick="switchTab(7)">Einstellungen</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
@@ -1162,15 +1257,82 @@
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════
+     TAB 6 — FORTSCHRITT
+═══════════════════════════════════════════════════════ -->
+<div class="view" id="v6">
+  <span class="eyebrow">Klausurvorbereitung</span>
+  <h2 class="section-title">Lernfortschritt</h2>
+  <p class="section-desc">Hake ab was du beherrschst. Der Score zeigt wie klausurklar du bist — gespeichert im Browser.</p>
+  <div id="prog-score-box"></div>
+  <div id="prog-modules"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 7 — EINSTELLUNGEN & BACKUP
+═══════════════════════════════════════════════════════ -->
+<div class="view" id="v7">
+  <span class="eyebrow">Datensicherung</span>
+  <h2 class="section-title">Einstellungen & Backup</h2>
+  <p class="section-desc">Sichere deinen Lernfortschritt in der Cloud und verbinde externe Kalender.</p>
+
+  <!-- GitHub Gist -->
+  <div class="settings-block">
+    <div class="settings-block-title">☁ GitHub Gist Backup</div>
+    <div class="settings-desc">Dein Fortschritt wird automatisch als privates GitHub Gist gesichert — bleibt erhalten auch wenn du den Browser-Cache leerst.<br><br>Token erstellen: github.com → Settings → Developer settings → Personal access tokens → Scope: <strong>gist</strong></div>
+    <div class="s-row">
+      <input class="s-input" id="gist-token-input" type="password" placeholder="ghp_xxxxxxxxxxxx (Token einfügen)">
+      <button class="s-btn" onclick="saveGistToken()">Speichern</button>
+    </div>
+    <button class="s-btn-full accent" onclick="manualBackup()">☁ Jetzt in Cloud sichern</button>
+    <button class="s-btn-full" onclick="restoreFromGist()">↓ Aus Cloud-Backup wiederherstellen</button>
+    <div class="s-status" id="gist-status">Noch kein Token gespeichert.</div>
+  </div>
+
+  <!-- ICS Export -->
+  <div class="settings-block">
+    <div class="settings-block-title">📅 Kalender-Export</div>
+    <div class="settings-desc">Exportiere deinen Stundenplan als .ics Datei — direkt importierbar in Apple Kalender, Google Calendar und Outlook. Klausuren bekommen automatisch eine Erinnerung 24h vorher.</div>
+    <button class="s-btn-full accent" onclick="exportAsICS()">📅 Als .ics exportieren (Apple / Outlook)</button>
+    <button class="s-btn-full" onclick="generateGCalLinks()">🗓 Google Calendar Links anzeigen</button>
+    <div id="gcal-links" style="display:none;margin-top:8px"></div>
+  </div>
+
+  <!-- JSON -->
+  <div class="settings-block">
+    <div class="settings-block-title">📦 JSON Export / Import</div>
+    <div class="settings-desc">Lade alle Daten als JSON-Datei herunter oder importiere ein vorhandenes Backup.</div>
+    <button class="s-btn-full accent" onclick="exportJSON()">↓ JSON-Backup herunterladen</button>
+    <button class="s-btn-full" onclick="document.getElementById('import-file').click()">↑ JSON-Backup importieren</button>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)">
+    <div class="s-status" id="import-status"></div>
+  </div>
+</div>
+
 <!-- ══════ SCRIPT ══════ -->
 <script>
+// ── Tab switching ──────────────────────────────────────
 function switchTab(i) {
   document.querySelectorAll('.tab-btn').forEach((t,j) => t.classList.toggle('active', j===i));
   document.querySelectorAll('.view').forEach((v,j) => v.classList.toggle('active', j===i));
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (i === 6) renderProgress();
+  if (i === 7) refreshSettingsStatus();
 }
 
-// Countdown
+// ── Theme ──────────────────────────────────────────────
+function toggleTheme() {
+  const cur  = document.documentElement.dataset.theme || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem('syn-theme-desktop', next);
+}
+(function() {
+  const t = localStorage.getItem('syn-theme-desktop');
+  if (t) document.documentElement.dataset.theme = t;
+})();
+
+// ── Countdown ─────────────────────────────────────────
 (function() {
   const el = document.getElementById('cd-box');
   const exam = new Date('2026-07-06');
@@ -1190,6 +1352,262 @@ function switchTab(i) {
       </div>
     </div>`;
 })();
+
+// ── Lernfortschritt ────────────────────────────────────
+const MODULES = [
+  { id:'ki',   name:'Künstliche Intelligenz',  color:'#7C3AED', themen:['KNN Grundlagen','Backpropagation','CNN / Faltungsnetze','Reinforcement Learning','NLP & Transformers','Evaluationsmetriken'] },
+  { id:'dav',  name:'Datenanalyse & Vis.',      color:'#2563EB', themen:['Deskriptive Statistik','Pandas / NumPy','Matplotlib / Seaborn','Korrelationsanalyse','Dimensionsreduktion (PCA)','Dashboard-Projekt'] },
+  { id:'adg',  name:'ADG',                      color:'#16A34A', themen:['Sortieralgorithmen','Suchalgorithmen','Graphen & Bäume','Dynamische Programmierung','Hashing','Komplexitätstheorie'] },
+  { id:'ana',  name:'Analysis',                 color:'#DC2626', themen:['Grenzwerte & Stetigkeit','Differentiation','Partielle Ableitungen','Integration','Mehrfachintegrale','Taylorreihe'] },
+  { id:'db',   name:'Datenbanken',              color:'#D97706', themen:['ER-Modellierung','Relationale Algebra','SQL Grundlagen','JOINs & Subqueries','Normalisierung','Transaktionen & ACID'] },
+  { id:'prog', name:'Programmierung 2',         color:'#9F67F5', themen:['OOP Konzepte','Vererbung & Polymorphismus','Interfaces','Collections & Generics','Exceptions','Design Patterns'] },
+  { id:'mis',  name:'Modellierung IS',          color:'#059669', themen:['UML Klassendiagramme','Use-Case-Diagramme','Sequenzdiagramme','Aktivitätsdiagramme','BPMN Grundlagen','Fallstudien'] },
+];
+
+function loadFortschritt() {
+  try { return JSON.parse(localStorage.getItem('syn-fortschritt') || '{}'); } catch { return {}; }
+}
+function saveFortschritt(data) { localStorage.setItem('syn-fortschritt', JSON.stringify(data)); scheduleAutoBackup(); }
+
+function toggleTopic(modId, idx) {
+  const d = loadFortschritt();
+  if (!d[modId]) d[modId] = {};
+  d[modId][idx] = !d[modId][idx];
+  saveFortschritt(d);
+  renderProgress();
+}
+function toggleModCard(modId) {
+  document.getElementById('topics-'+modId).classList.toggle('open');
+  document.getElementById('chev-'+modId).classList.toggle('open');
+}
+function renderProgress() {
+  const data = loadFortschritt();
+  let total = 0, done = 0;
+  MODULES.forEach(m => { total += m.themen.length; m.themen.forEach((_,i) => { if (data[m.id]?.[i]) done++; }); });
+  const score = total > 0 ? Math.round((done/total)*100) : 0;
+  document.getElementById('prog-score-box').innerHTML = `
+    <div class="prog-score">
+      <div class="prog-score-num">${score}%</div>
+      <div class="prog-score-body">
+        <div class="prog-score-label">Klausur-Bereitschaft</div>
+        <div class="prog-score-sub">${done} von ${total} Themen abgehakt</div>
+        <div class="prog-score-bar"><div class="prog-score-fill" style="width:${score}%"></div></div>
+      </div>
+    </div>`;
+  document.getElementById('prog-modules').innerHTML = MODULES.map(m => {
+    const pct = Math.round((m.themen.filter((_,i)=>data[m.id]?.[i]).length / m.themen.length)*100);
+    return `<div class="mod-card">
+      <div class="mod-card-head" onclick="toggleModCard('${m.id}')">
+        <span class="mod-card-name">${m.name}</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="mod-pct" style="color:${m.color}">${pct}%</span>
+          <span class="mod-chevron" id="chev-${m.id}">›</span>
+        </div>
+      </div>
+      <div class="mod-bar-wrap"><div class="mod-bar-fill" style="width:${pct}%;background:${m.color}"></div></div>
+      <div class="mod-topics" id="topics-${m.id}">
+        ${m.themen.map((t,i) => `<div class="topic-row" onclick="toggleTopic('${m.id}',${i})">
+          <div class="topic-check${data[m.id]?.[i]?' done':''}">${data[m.id]?.[i]?'✓':''}</div>
+          <span class="topic-label${data[m.id]?.[i]?' done':''}">${t}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Backup Status Pill ─────────────────────────────────
+function setBackupStatus(state, text) {
+  const dot = document.getElementById('backup-dot');
+  const span = document.getElementById('backup-text');
+  if (!dot||!span) return;
+  dot.className = 'dot' + (state==='ok'?' ok':state==='err'?' err':state==='spin'?' spin':'');
+  span.textContent = text;
+}
+
+// ── GitHub Gist Backup ─────────────────────────────────
+let backupTimer = null;
+function scheduleAutoBackup() { clearTimeout(backupTimer); backupTimer = setTimeout(autoBackup, 3000); }
+
+function getAllData() {
+  return {
+    fortschritt: loadFortschritt(),
+    courses:    JSON.parse(localStorage.getItem('syn-stundenplan-v2') || 'null'),
+    klausuren:  JSON.parse(localStorage.getItem('syn-klausuren') || '[]'),
+    notizen:    JSON.parse(localStorage.getItem('syn-notizen') || '[]'),
+    backed_up:  new Date().toISOString()
+  };
+}
+
+async function doGistBackup(token) {
+  const payload = {
+    description: 'Synotix Stundenplan SoSe 2026 — Cloud Backup',
+    public: false,
+    files: { 'stundenplan-backup.json': { content: JSON.stringify(getAllData(), null, 2) } }
+  };
+  const gistId = localStorage.getItem('syn-gist-id');
+  const res = await fetch(gistId ? `https://api.github.com/gists/${gistId}` : 'https://api.github.com/gists', {
+    method: gistId ? 'PATCH' : 'POST',
+    headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const data = await res.json();
+  if (!gistId) localStorage.setItem('syn-gist-id', data.id);
+  return data;
+}
+
+async function autoBackup() {
+  const token = localStorage.getItem('syn-gist-token');
+  if (!token) return;
+  setBackupStatus('spin', 'Sichern…');
+  try {
+    await doGistBackup(token);
+    const t = new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+    localStorage.setItem('syn-gist-last', t);
+    setBackupStatus('ok', t);
+  } catch { setBackupStatus('err', 'Fehler'); }
+}
+
+async function manualBackup() {
+  const token = localStorage.getItem('syn-gist-token');
+  if (!token) { alert('Bitte zuerst deinen GitHub Token eingeben und speichern.'); return; }
+  setBackupStatus('spin', 'Sichern…');
+  try {
+    await doGistBackup(token);
+    const t = new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+    localStorage.setItem('syn-gist-last', t);
+    setBackupStatus('ok', t);
+    refreshSettingsStatus();
+    alert('✓ Backup erfolgreich gespeichert!');
+  } catch(e) {
+    setBackupStatus('err', 'Fehler');
+    alert('Backup fehlgeschlagen: ' + e.message);
+  }
+}
+
+async function restoreFromGist() {
+  const token  = localStorage.getItem('syn-gist-token');
+  const gistId = localStorage.getItem('syn-gist-id');
+  if (!token || !gistId) { alert('Kein Backup gefunden. Bitte zuerst Token eingeben und ein Backup erstellen.'); return; }
+  if (!confirm('Alle lokalen Daten mit dem Cloud-Backup überschreiben?')) return;
+  try {
+    const res  = await fetch(`https://api.github.com/gists/${gistId}`, { headers: { Authorization: `token ${token}` } });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const gist = await res.json();
+    const raw  = gist.files['stundenplan-backup.json']?.content;
+    if (!raw) throw new Error('Backup-Datei nicht gefunden');
+    const data = JSON.parse(raw);
+    if (data.fortschritt) localStorage.setItem('syn-fortschritt', JSON.stringify(data.fortschritt));
+    if (data.courses)     localStorage.setItem('syn-stundenplan-v2', JSON.stringify(data.courses));
+    if (data.klausuren)   localStorage.setItem('syn-klausuren', JSON.stringify(data.klausuren));
+    if (data.notizen)     localStorage.setItem('syn-notizen', JSON.stringify(data.notizen));
+    renderProgress();
+    refreshSettingsStatus();
+    alert('✓ Backup wiederhergestellt!');
+  } catch(e) { alert('Fehler: ' + e.message); }
+}
+
+function saveGistToken() {
+  const val = document.getElementById('gist-token-input').value.trim();
+  if (!val) { alert('Bitte Token eingeben!'); return; }
+  localStorage.setItem('syn-gist-token', val);
+  document.getElementById('gist-token-input').value = '';
+  refreshSettingsStatus();
+  autoBackup();
+  alert('✓ Token gespeichert! Erstes Backup läuft…');
+}
+
+function refreshSettingsStatus() {
+  const hasToken = !!localStorage.getItem('syn-gist-token');
+  const gistId   = localStorage.getItem('syn-gist-id');
+  const last     = localStorage.getItem('syn-gist-last');
+  const el = document.getElementById('gist-status');
+  if (el) {
+    el.innerHTML = hasToken
+      ? `Token: ✓ gespeichert<br>Gist-ID: ${gistId || '(wird beim ersten Backup erstellt)'}<br>Letztes Backup: ${last || '—'}`
+      : 'Noch kein Token gespeichert.';
+  }
+  setBackupStatus(hasToken ? 'ok' : '', hasToken ? (last || '—') : '—');
+}
+
+// ── ICS Export ─────────────────────────────────────────
+function exportAsICS() {
+  const DAY_OFFSET = {Mo:0,Di:1,Mi:2,Do:3,Fr:4};
+  const SEM_START  = new Date('2026-04-06');
+  function pad(n) { return String(n).padStart(2,'0'); }
+  function icsDate(base, time) {
+    const [h,m] = time.split(':');
+    return `${base.getFullYear()}${pad(base.getMonth()+1)}${pad(base.getDate())}T${pad(h)}${pad(m)}00`;
+  }
+  const courses   = JSON.parse(localStorage.getItem('syn-stundenplan-v2') || '[]');
+  const klausuren = JSON.parse(localStorage.getItem('syn-klausuren') || '[]');
+  let ics = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Synotix Stundenplan//DE\r\nCALSCALE:GREGORIAN\r\n';
+  courses.forEach(c => {
+    const d = new Date(SEM_START); d.setDate(d.getDate()+(DAY_OFFSET[c.day]||0));
+    ics += `BEGIN:VEVENT\r\nUID:syn-${c.id}@stundenplan\r\nSUMMARY:${c.name}\r\nDTSTART:${icsDate(d,c.start)}\r\nDTEND:${icsDate(d,c.end)}\r\nRRULE:FREQ=WEEKLY;UNTIL=20260718T235959Z\r\nLOCATION:${c.room||''}\r\nDESCRIPTION:${c.prof||''}\r\nEND:VEVENT\r\n`;
+  });
+  klausuren.forEach(k => {
+    const [y,mo,d] = k.date.split('-'); const [h,m] = (k.time||'09:00').split(':');
+    ics += `BEGIN:VEVENT\r\nUID:syn-k-${k.id}@stundenplan\r\nSUMMARY:${k.name}\r\nDTSTART:${y}${mo}${d}T${h}${m}00\r\nDTEND:${y}${mo}${d}T${pad(parseInt(h)+2)}${m}00\r\nBEGIN:VALARM\r\nTRIGGER:-PT24H\r\nACTION:DISPLAY\r\nDESCRIPTION:Morgen: ${k.name}\r\nEND:VALARM\r\nEND:VEVENT\r\n`;
+  });
+  ics += 'END:VCALENDAR';
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(new Blob([ics],{type:'text/calendar'})),
+    download: 'stundenplan-sose26.ics'
+  });
+  a.click();
+}
+
+// ── Google Calendar Links ──────────────────────────────
+function generateGCalLinks() {
+  const DAY_OFFSET = {Mo:0,Di:1,Mi:2,Do:3,Fr:4};
+  const SEM_START  = new Date('2026-04-06');
+  function pad(n) { return String(n).padStart(2,'0'); }
+  function gcalDt(dayKey, time) {
+    const d = new Date(SEM_START); d.setDate(d.getDate()+(DAY_OFFSET[dayKey]||0));
+    const [h,m]=time.split(':');
+    return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${h}${m}00`;
+  }
+  const courses   = JSON.parse(localStorage.getItem('syn-stundenplan-v2') || '[]');
+  const klausuren = JSON.parse(localStorage.getItem('syn-klausuren') || '[]');
+  const el = document.getElementById('gcal-links');
+  const rows = [
+    ...courses.map(c => `<a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(c.name)}&dates=${gcalDt(c.day,c.start)}/${gcalDt(c.day,c.end)}&location=${encodeURIComponent(c.room||'')}&details=${encodeURIComponent((c.prof||'')+' · Wöchentlich')}" target="_blank">${c.day} ${c.start} · ${c.name}</a>`),
+    ...klausuren.map(k => { const [y,mo,d]=k.date.split('-'),t=(k.time||'09:00').replace(':',''); return `<a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(k.name)}&dates=${y}${mo}${d}T${t}00/${y}${mo}${d}T${pad(parseInt(t.slice(0,2))+2)}${t.slice(2)}00" target="_blank" style="background:var(--violet-glow);border-color:var(--violet-line);color:var(--violet)">${k.date} · ${k.name} (Klausur)</a>`; })
+  ];
+  el.innerHTML = `<p style="font-family:var(--f-mono);font-size:9px;color:var(--tx-2);margin-bottom:8px;letter-spacing:0.10em">KLICK ÖFFNET GOOGLE CALENDAR — TIPP: ERST KURSE IN DER MOBILEN APP ANLEGEN</p>` + rows.join('');
+  el.style.display = 'block';
+}
+
+// ── JSON Export / Import ───────────────────────────────
+function exportJSON() {
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(new Blob([JSON.stringify(getAllData(),null,2)],{type:'application/json'})),
+    download: 'stundenplan-backup.json'
+  });
+  a.click();
+}
+function importJSON(event) {
+  const file = event.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!confirm('Alle lokalen Daten mit dem Backup überschreiben?')) return;
+      if (data.fortschritt) localStorage.setItem('syn-fortschritt', JSON.stringify(data.fortschritt));
+      if (data.courses)     localStorage.setItem('syn-stundenplan-v2', JSON.stringify(data.courses));
+      if (data.klausuren)   localStorage.setItem('syn-klausuren', JSON.stringify(data.klausuren));
+      if (data.notizen)     localStorage.setItem('syn-notizen', JSON.stringify(data.notizen));
+      renderProgress();
+      document.getElementById('import-status').textContent = `✓ Importiert: ${data.courses?.length||0} Kurse, ${data.klausuren?.length||0} Prüfungen, ${data.notizen?.length||0} Notizen, Fortschritt gespeichert`;
+    } catch(err) { document.getElementById('import-status').textContent = 'Fehler: ' + err.message; }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ── Init ───────────────────────────────────────────────
+refreshSettingsStatus();
 </script>
 
 </body>
