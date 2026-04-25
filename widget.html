@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Heute · Stundenplan</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <meta name="theme-color" content="#7C3AED">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Heute">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-0: #0C0A14; --bg-1: #12101C; --bg-2: #1A1726; --bg-3: #221F30;
+      --violet: #7C3AED; --violet-mid: #9F67F5; --violet-deep: #4C1D95;
+      --violet-glow: rgba(124,58,237,0.10); --violet-line: rgba(124,58,237,0.25);
+      --tx-0: #F5F3FF; --tx-1: #C4C0E0; --tx-2: #8580A0; --tx-3: #504C6A;
+      --ok: #22C55E; --warn: #F59E0B; --err: #EF4444; --info: #60A5FA;
+      --f-mono: 'JetBrains Mono', monospace;
+      --f-display: 'Lora', serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: var(--f-mono);
+      background: var(--bg-0);
+      color: var(--tx-0);
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Header */
+    .widget-header {
+      background: var(--bg-1);
+      border-bottom: 1px solid var(--violet-line);
+      padding: 14px 16px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .wh-brand { display: flex; align-items: center; gap: 10px; }
+    .wh-mark { width: 20px; height: 22px; flex-shrink: 0; }
+    .wh-sep { width:1px; height:22px; background: linear-gradient(180deg,transparent,var(--violet-mid) 25%,var(--violet-mid) 75%,transparent); opacity:.5; margin:0 10px; }
+    .wh-title { font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--tx-0); font-weight: 500; }
+    .wh-clock { font-size: 22px; letter-spacing: 0.04em; color: var(--tx-0); }
+    .wh-date  { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--tx-2); text-align: right; margin-top: 2px; }
+
+    /* Countdown */
+    .exam-countdown {
+      background: var(--violet-glow);
+      border: 1px solid var(--violet-line);
+      margin: 12px 16px 0;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .ec-days { font-family: var(--f-display); font-size: 32px; font-weight: 500;
+      background: linear-gradient(135deg, var(--violet-mid), var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+    .ec-label { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--tx-2); }
+    .ec-sub   { font-size: 11px; color: var(--tx-1); margin-top: 2px; }
+
+    /* Section label */
+    .sect-label {
+      font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--violet); padding: 14px 16px 6px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sect-label::after { content:''; flex:1; height:1px; background: linear-gradient(90deg, var(--violet-line), transparent); }
+
+    /* Course cards */
+    .course-card {
+      margin: 4px 16px; padding: 12px 14px;
+      background: var(--bg-1); border: 1px solid rgba(255,255,255,0.06);
+      border-left: 3px solid var(--violet);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .course-card.is-now { background: var(--violet-glow); border-color: var(--violet-line); border-left-color: var(--violet-mid); }
+    .course-card.done   { opacity: 0.45; }
+    .cc-time { font-size: 11px; color: var(--tx-2); min-width: 44px; line-height: 1.4; }
+    .cc-name { font-size: 13px; color: var(--tx-0); font-family: var(--f-display); flex: 1; line-height: 1.3; }
+    .cc-room { font-size: 9px; color: var(--tx-2); margin-top: 2px; letter-spacing: 0.08em; }
+    .now-badge {
+      font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase;
+      background: var(--violet); color: #fff; padding: 2px 6px; flex-shrink: 0;
+    }
+
+    /* Klausur cards */
+    .klausur-card {
+      margin: 4px 16px; padding: 10px 14px;
+      background: var(--bg-1); border: 1px solid rgba(255,255,255,0.06);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .kc-days { font-family: var(--f-display); font-size: 20px; font-weight: 500; min-width: 44px; line-height: 1; }
+    .kc-name { font-size: 13px; color: var(--tx-0); flex: 1; }
+    .kc-date { font-size: 9px; color: var(--tx-2); margin-top: 2px; letter-spacing: 0.08em; }
+
+    /* Empty */
+    .empty-day {
+      margin: 16px; padding: 20px 16px; background: var(--bg-1);
+      border: 1px solid rgba(255,255,255,0.06); text-align: center;
+      color: var(--tx-2); font-size: 12px; line-height: 1.8;
+    }
+
+    /* Footer link */
+    .widget-footer {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--bg-1); border-top: 1px solid var(--violet-line);
+      padding: 12px 16px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-link {
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--violet); text-decoration: none;
+    }
+    .footer-link:active { color: var(--violet-mid); }
+    .footer-hint { font-size: 9px; color: var(--tx-2); letter-spacing: 0.08em; }
+
+    .main-scroll { padding-bottom: 56px; }
+  </style>
+</head>
+<body>
+
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <defs>
+    <linearGradient id="gMark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A78BFA"/>
+      <stop offset="45%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#4C1D95"/>
+    </linearGradient>
+    <symbol id="syn-mark" viewBox="0 0 80 86">
+      <polygon points="12,4 62,28 12,52 12,42 52,28 12,14" fill="url(#gMark)"/>
+      <polygon points="68,34 18,58 68,82 68,72 28,58 68,44" fill="url(#gMark)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="widget-header">
+  <div class="wh-brand">
+    <svg class="wh-mark" viewBox="0 0 80 86"><use href="#syn-mark"/></svg>
+    <div class="wh-sep"></div>
+    <span class="wh-title">Heute</span>
+  </div>
+  <div style="text-align:right">
+    <div class="wh-clock" id="wh-clock">--:--</div>
+    <div class="wh-date"  id="wh-date">--</div>
+  </div>
+</header>
+
+<div class="main-scroll">
+  <div id="countdown-box"></div>
+  <div id="today-courses"></div>
+  <div id="next-exams"></div>
+</div>
+
+<footer class="widget-footer">
+  <a href="stundenplan.html" class="footer-link">→ Lernplan öffnen</a>
+  <a href="stundenplan-mobile.html" class="footer-link">→ Mobile App</a>
+</footer>
+
+<script>
+const DAYS     = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+const DAY_FULL = { Mo:'Montag', Di:'Dienstag', Mi:'Mittwoch', Do:'Donnerstag', Fr:'Freitag' };
+const DEFAULTS = [
+  { id:1,  day:'Mo', name:'Künstliche Intelligenz',   start:'10:00', end:'13:15', room:'St-C118' },
+  { id:2,  day:'Mo', name:'Datenanalyse & Vis.',       start:'15:15', end:'18:30', room:'St-C018' },
+  { id:3,  day:'Di', name:'ADG (V)',                   start:'08:15', end:'09:45', room:'St-HS8' },
+  { id:4,  day:'Di', name:'Analysis (U)',              start:'13:30', end:'15:00', room:'St-B062' },
+  { id:5,  day:'Mi', name:'Datenbanken (V)',           start:'08:15', end:'09:45', room:'St-HS1/2' },
+  { id:6,  day:'Mi', name:'Math-algo Grundlagen DS',   start:'10:00', end:'13:15', room:'St-C119' },
+  { id:7,  day:'Mi', name:'Analysis (V)',              start:'13:30', end:'15:00', room:'St-HS1/2' },
+  { id:8,  day:'Do', name:'Unternehmensplanspiel',     start:'08:15', end:'11:30', room:'St-C125/130' },
+  { id:9,  day:'Do', name:'Datenbanken (U)',           start:'12:00', end:'13:30', room:'St-C016' },
+  { id:10, day:'Do', name:'Programmierung 2 (U)',      start:'13:30', end:'15:45', room:'St-C175' },
+  { id:11, day:'Fr', name:'Modellierung IS (V)',       start:'10:00', end:'11:30', room:'St-HS8' },
+  { id:12, day:'Fr', name:'Modellierung IS (U)',       start:'11:45', end:'13:15', room:'St-C063' },
+];
+
+function toMin(t) { const [h,m]=t.split(':').map(Number); return h*60+m; }
+function pad(n) { return String(n).padStart(2,'0'); }
+
+function loadCourses() {
+  try { const r=localStorage.getItem('syn-stundenplan-v2'); return r ? JSON.parse(r) : DEFAULTS; }
+  catch { return DEFAULTS; }
+}
+function loadKlausuren() {
+  try { return JSON.parse(localStorage.getItem('syn-klausuren')||'[]'); }
+  catch { return []; }
+}
+
+function updateClock() {
+  const now = new Date();
+  document.getElementById('wh-clock').textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  document.getElementById('wh-date').textContent  = now.toLocaleDateString('de-DE',{weekday:'long',day:'2-digit',month:'long'});
+}
+
+function renderCountdown() {
+  const exam = new Date('2026-07-06');
+  const now  = new Date(); now.setHours(0,0,0,0);
+  const diff = Math.max(0, Math.ceil((exam - now) / 86400000));
+  document.getElementById('countdown-box').innerHTML = `
+    <div class="exam-countdown">
+      <div class="ec-days">${diff}</div>
+      <div>
+        <div class="ec-label">Tage bis Prüfungsphase</div>
+        <div class="ec-sub">Anfang Juli 2026</div>
+      </div>
+    </div>`;
+}
+
+function renderTodayCourses() {
+  const courses  = loadCourses();
+  const todayKey = DAYS[new Date().getDay()];
+  const nowM     = new Date().getHours() * 60 + new Date().getMinutes();
+  const dayName  = DAY_FULL[todayKey] || todayKey;
+  const el       = document.getElementById('today-courses');
+
+  const todayCourses = courses.filter(c => c.day === todayKey).sort((a,b) => toMin(a.start) - toMin(b.start));
+
+  let html = `<div class="sect-label">${dayName}</div>`;
+  if (todayCourses.length === 0) {
+    html += `<div class="empty-day">Heute keine Vorlesungen.<br>Gute Zeit zum Nachbereiten! 📚</div>`;
+  } else {
+    html += todayCourses.map(c => {
+      const isNow  = nowM >= toMin(c.start) && nowM < toMin(c.end);
+      const isDone = nowM >= toMin(c.end);
+      return `<div class="course-card${isNow?' is-now':''}${isDone?' done':''}">
+        <div class="cc-time">${c.start}<br>${c.end}</div>
+        <div style="flex:1">
+          <div class="cc-name">${c.name}</div>
+          ${c.room ? `<div class="cc-room">${c.room}</div>` : ''}
+        </div>
+        ${isNow ? '<span class="now-badge">Jetzt</span>' : ''}
+      </div>`;
+    }).join('');
+  }
+  el.innerHTML = html;
+}
+
+function renderNextExams() {
+  const klausuren = loadKlausuren();
+  const now = new Date(); now.setHours(0,0,0,0);
+  const upcoming = klausuren
+    .filter(k => new Date(k.date) >= now)
+    .sort((a,b) => new Date(a.date) - new Date(b.date))
+    .slice(0, 3);
+  if (upcoming.length === 0) return;
+
+  const colors = ['#DC2626','#D97706','#2563EB'];
+  let html = `<div class="sect-label">Nächste Prüfungen</div>`;
+  html += upcoming.map((k, i) => {
+    const days = Math.ceil((new Date(k.date) - now) / 86400000);
+    return `<div class="klausur-card">
+      <div class="kc-days" style="color:${colors[i]||'var(--tx-2)'}">${days}d</div>
+      <div>
+        <div class="kc-name">${k.name}</div>
+        <div class="kc-date">${new Date(k.date).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'})}${k.time?' · '+k.time:''}${k.room?' · '+k.room:''}</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('next-exams').innerHTML = html;
+}
+
+function render() {
+  updateClock();
+  renderCountdown();
+  renderTodayCourses();
+  renderNextExams();
+}
+
+render();
+setInterval(updateClock, 30000);
+setInterval(renderTodayCourses, 60000);
+</script>
+</body>
+</html>

@@ -433,6 +433,63 @@
 
     /* ══════ GLOW LINE ══════ */
     .glow-line { height: 1px; background: linear-gradient(90deg, transparent, var(--violet), transparent); opacity: 0.35; border: none; margin: 28px 0; }
+
+    /* ══════ DARK MODE ══════ */
+    [data-theme="dark"] {
+      --bg-0: #0C0A14; --bg-1: #12101C; --bg-2: #1A1726; --bg-3: #221F30; --bg-4: #2C293C;
+      --tx-0: #F5F3FF; --tx-1: #C4C0E0; --tx-2: #8580A0; --tx-3: #504C6A;
+      --bd: rgba(255,255,255,0.07); --bd-hi: rgba(255,255,255,0.13);
+    }
+    [data-theme="dark"] .tab-strip { background: var(--bg-1); }
+    [data-theme="dark"] .tab-btn { color: var(--tx-2); }
+    [data-theme="dark"] .tab-btn.active { color: var(--violet-mid); border-bottom-color: var(--violet-mid); }
+
+    .theme-btn {
+      background: none; border: 1px solid rgba(255,255,255,0.15); color: var(--tx-inv1);
+      cursor: pointer; padding: 5px 12px; font-family: var(--f-mono); font-size: 10px;
+      letter-spacing: 0.10em; text-transform: uppercase; transition: all 150ms ease; flex-shrink: 0;
+    }
+    .theme-btn:hover { border-color: var(--violet-mid); color: var(--violet-mid); }
+
+    /* ══════ PROGRESS TRACKER ══════ */
+    .prog-score {
+      background: var(--bg-dark); border: 1px solid var(--violet-line);
+      padding: 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 20px;
+    }
+    .prog-score-num {
+      font-family: var(--f-display); font-size: 56px; font-weight: 600;
+      background: linear-gradient(135deg, var(--violet-mid) 0%, var(--violet) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1; min-width: 80px;
+    }
+    .prog-score-body { flex: 1; }
+    .prog-score-label { font-family: var(--f-mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--tx-inv1); }
+    .prog-score-sub { font-size: 13px; color: var(--tx-inv1); margin-top: 3px; }
+    .prog-score-bar { width: 100%; height: 3px; background: var(--bg-dark3); margin-top: 10px; }
+    .prog-score-fill { height: 100%; background: linear-gradient(90deg, var(--violet-deep), var(--violet-mid)); transition: width 0.6s; }
+
+    .mod-card { background: var(--bg-1); border: 1px solid var(--bd); padding: 16px; margin-bottom: 8px; }
+    .mod-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; cursor: pointer; user-select: none; }
+    .mod-card-name { font-family: var(--f-display); font-size: 16px; font-weight: 500; color: var(--tx-0); }
+    .mod-pct { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.10em; }
+    .mod-bar-wrap { height: 2px; background: var(--bg-3); margin-bottom: 0; }
+    .mod-bar-fill { height: 100%; transition: width 0.4s ease; }
+    .mod-topics { display: none; margin-top: 12px; }
+    .mod-topics.open { display: block; }
+    .topic-row {
+      display: flex; align-items: center; gap: 10px; padding: 8px 0;
+      border-bottom: 1px solid var(--bd); cursor: pointer;
+    }
+    .topic-row:last-child { border-bottom: none; }
+    .topic-check {
+      width: 16px; height: 16px; border: 1px solid var(--bd-hi); background: var(--bg-2);
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px;
+    }
+    .topic-check.done { background: var(--violet); border-color: var(--violet); color: #fff; }
+    .topic-label { font-size: 13px; color: var(--tx-1); flex: 1; }
+    .topic-label.done { color: var(--tx-2); text-decoration: line-through; }
+    .mod-chevron { font-size: 14px; color: var(--tx-2); transition: transform 0.2s; }
+    .mod-chevron.open { transform: rotate(90deg); }
   </style>
 </head>
 <body>
@@ -464,6 +521,7 @@
       <span class="topbar-subtitle">Melih · WiInf 4. Sem · SoSe 2026</span>
     </div>
   </div>
+  <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">◑ Modus</button>
 </nav>
 
 <!-- ══════ TABS ══════ -->
@@ -474,6 +532,7 @@
   <button class="tab-btn" onclick="switchTab(3)">Module</button>
   <button class="tab-btn" onclick="switchTab(4)">Klausurphase</button>
   <button class="tab-btn" onclick="switchTab(5)">Goldene Regeln</button>
+  <button class="tab-btn" onclick="switchTab(6)">Fortschritt</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
@@ -1162,15 +1221,40 @@
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════
+     TAB 6 — FORTSCHRITT
+═══════════════════════════════════════════════════════ -->
+<div class="view" id="v6">
+  <span class="eyebrow">Klausurvorbereitung</span>
+  <h2 class="section-title">Lernfortschritt</h2>
+  <p class="section-desc">Hake ab was du beherrschst. Der Score zeigt wie klausurklar du bist.</p>
+
+  <div id="prog-score-box"></div>
+  <div id="prog-modules"></div>
+</div>
+
 <!-- ══════ SCRIPT ══════ -->
 <script>
 function switchTab(i) {
   document.querySelectorAll('.tab-btn').forEach((t,j) => t.classList.toggle('active', j===i));
   document.querySelectorAll('.view').forEach((v,j) => v.classList.toggle('active', j===i));
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (i === 6) renderProgress();
 }
 
-// Countdown
+// ── Theme ──────────────────────────────────────────────
+function toggleTheme() {
+  const cur = document.documentElement.dataset.theme || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem('syn-theme-desktop', next);
+}
+(function() {
+  const saved = localStorage.getItem('syn-theme-desktop');
+  if (saved) document.documentElement.dataset.theme = saved;
+})();
+
+// ── Countdown ─────────────────────────────────────────
 (function() {
   const el = document.getElementById('cd-box');
   const exam = new Date('2026-07-06');
@@ -1190,6 +1274,97 @@ function switchTab(i) {
       </div>
     </div>`;
 })();
+
+// ── Lernfortschritt-Tracker ───────────────────────────
+const MODULES = [
+  { id:'ki',   name:'Künstliche Intelligenz',  color:'#7C3AED',
+    themen:['KNN Grundlagen','Backpropagation','CNN / Faltungsnetze','Reinforcement Learning','NLP & Transformers','Evaluationsmetriken'] },
+  { id:'dav',  name:'Datenanalyse & Vis.',       color:'#2563EB',
+    themen:['Deskriptive Statistik','Pandas / NumPy','Matplotlib / Seaborn','Korrelationsanalyse','Dimensionsreduktion (PCA)','Dashboard-Projekt'] },
+  { id:'adg',  name:'ADG',                       color:'#16A34A',
+    themen:['Sortieralgorithmen','Such­algo­rithmen','Graphen & Bäume','Dynamische Programmierung','Hashing','Komplexitätstheorie'] },
+  { id:'ana',  name:'Analysis',                  color:'#DC2626',
+    themen:['Grenzwerte & Stetigkeit','Differentiation','Partielle Ableitungen','Integration','Mehr­fach­integrale','Taylorreihe'] },
+  { id:'db',   name:'Datenbanken',               color:'#D97706',
+    themen:['ER-Modellierung','Relationale Algebra','SQL Grundlagen','JOINs & Subqueries','Normalisierung','Transaktionen & ACID'] },
+  { id:'prog', name:'Programmierung 2',          color:'#9F67F5',
+    themen:['OOP Konzepte','Vererbung & Polymorphismus','Interfaces','Collections & Generics','Exceptions','Design Patterns'] },
+  { id:'mis',  name:'Modellierung IS',           color:'#059669',
+    themen:['UML Klassendiagramme','Use-Case-Diagramme','Sequenzdiagramme','Aktivitätsdiagramme','BPMN Grundlagen','Fallstudien'] },
+];
+
+function loadFortschritt() {
+  try {
+    const raw = localStorage.getItem('syn-fortschritt');
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+
+function saveFortschritt(data) {
+  localStorage.setItem('syn-fortschritt', JSON.stringify(data));
+}
+
+function toggleTopic(modId, topicIdx) {
+  const data = loadFortschritt();
+  if (!data[modId]) data[modId] = {};
+  data[modId][topicIdx] = !data[modId][topicIdx];
+  saveFortschritt(data);
+  renderProgress();
+}
+
+function toggleModCard(modId) {
+  const topics = document.getElementById('topics-' + modId);
+  const chev   = document.getElementById('chev-' + modId);
+  if (!topics) return;
+  topics.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function renderProgress() {
+  const data = loadFortschritt();
+  let totalTopics = 0, doneTopics = 0;
+  MODULES.forEach(m => {
+    totalTopics += m.themen.length;
+    m.themen.forEach((_, i) => { if (data[m.id]?.[i]) doneTopics++; });
+  });
+  const score = totalTopics > 0 ? Math.round((doneTopics / totalTopics) * 100) : 0;
+
+  document.getElementById('prog-score-box').innerHTML = `
+    <div class="prog-score">
+      <div class="prog-score-num">${score}%</div>
+      <div class="prog-score-body">
+        <div class="prog-score-label">Klausur-Bereitschaft</div>
+        <div class="prog-score-sub">${doneTopics} von ${totalTopics} Themen abgehakt</div>
+        <div class="prog-score-bar"><div class="prog-score-fill" style="width:${score}%"></div></div>
+      </div>
+    </div>`;
+
+  document.getElementById('prog-modules').innerHTML = MODULES.map(m => {
+    const done = m.themen.filter((_, i) => data[m.id]?.[i]).length;
+    const pct  = Math.round((done / m.themen.length) * 100);
+    const topicsHtml = m.themen.map((t, i) => {
+      const isDone = data[m.id]?.[i];
+      return `<div class="topic-row" onclick="toggleTopic('${m.id}',${i})">
+        <div class="topic-check${isDone ? ' done' : ''}">${isDone ? '✓' : ''}</div>
+        <span class="topic-label${isDone ? ' done' : ''}">${t}</span>
+      </div>`;
+    }).join('');
+    return `
+      <div class="mod-card">
+        <div class="mod-card-head" onclick="toggleModCard('${m.id}')">
+          <span class="mod-card-name">${m.name}</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="mod-pct" style="color:${m.color}">${pct}%</span>
+            <span class="mod-chevron" id="chev-${m.id}">›</span>
+          </div>
+        </div>
+        <div class="mod-bar-wrap">
+          <div class="mod-bar-fill" style="width:${pct}%;background:${m.color}"></div>
+        </div>
+        <div class="mod-topics" id="topics-${m.id}">${topicsHtml}</div>
+      </div>`;
+  }).join('');
+}
 </script>
 
 </body>

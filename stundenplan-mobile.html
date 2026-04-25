@@ -735,6 +735,49 @@
       color: var(--tx-d2);
     }
 
+    /* ═══════════ BACKUP STATUS ═══════════ */
+    .backup-status {
+      display: flex; align-items: center; gap: 6px;
+      font-family: var(--f-mono); font-size: 9px; letter-spacing: 0.10em;
+      color: var(--tx-d1); padding: 2px 8px; border: 1px solid var(--bd);
+    }
+    .backup-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--tx-d2); flex-shrink: 0; }
+    .backup-dot.ok  { background: var(--ok); }
+    .backup-dot.err { background: #EF4444; }
+    .backup-dot.spin { background: var(--orange); animation: spin-dot 1s linear infinite; }
+    @keyframes spin-dot { 0%{opacity:1}50%{opacity:0.3}100%{opacity:1} }
+
+    /* ═══════════ SETTINGS TAB ═══════════ */
+    .settings-section { padding: 16px; border-bottom: 1px solid var(--bd); }
+    .settings-section:last-child { border-bottom: none; }
+    .settings-title {
+      font-family: var(--f-mono); font-size: 9px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--orange); margin-bottom: 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .settings-title::after { content:''; flex:1; height:1px; background: var(--orange-line); }
+    .settings-desc { font-size: 12px; color: var(--tx-d1); line-height: 1.6; margin-bottom: 12px; }
+    .settings-row { display: flex; gap: 8px; margin-bottom: 8px; }
+    .settings-input {
+      flex: 1; background: var(--bg-2); border: 1px solid var(--bd-hi); color: var(--tx-d0);
+      font-family: var(--f-mono); font-size: 12px; padding: 10px 12px; outline: none;
+    }
+    .settings-input:focus { border-color: var(--orange); }
+    .settings-btn {
+      background: var(--bg-3); border: 1px solid var(--bd-hi); color: var(--tx-d0);
+      font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.08em; padding: 10px 14px;
+      cursor: pointer; white-space: nowrap; transition: all 0.15s;
+    }
+    .settings-btn:active { background: var(--orange); color: #fff; border-color: var(--orange); }
+    .settings-btn-full {
+      width: 100%; background: var(--bg-2); border: 1px solid var(--bd-hi); color: var(--tx-d0);
+      font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.08em; padding: 12px;
+      cursor: pointer; text-align: center; transition: all 0.15s; margin-bottom: 8px;
+    }
+    .settings-btn-full:active { background: var(--orange); color: #fff; }
+    .settings-btn-full.accent { background: var(--orange-glow); border-color: var(--orange-line); color: var(--orange); }
+    .settings-status { font-family: var(--f-mono); font-size: 10px; color: var(--tx-d2); margin-top: 8px; line-height: 1.6; }
+
     /* ═══════════ MEHR VIEW ═══════════ */
     .mehr-view { display: none; padding-bottom: calc(var(--bottom-h) + 20px); }
 
@@ -1136,8 +1179,11 @@
     <span class="nav-sub">Melih · SoSe 2026</span>
   </div>
   <div class="nav-actions">
+    <div class="backup-status" id="backup-status" title="Backup-Status">
+      <div class="backup-dot" id="backup-dot"></div>
+      <span id="backup-text">—</span>
+    </div>
     <button class="icon-btn" onclick="toggleTheme()" title="Theme wechseln">◑</button>
-    <button class="icon-btn" onclick="exportData()" title="Exportieren">↓</button>
     <button class="icon-btn" onclick="resetToDefault()" title="Zurücksetzen">↺</button>
   </div>
 </nav>
@@ -1177,6 +1223,7 @@
       <button class="mehr-tab" id="mt-3" onclick="switchMehrTab(3)">04 Ernährung</button>
       <button class="mehr-tab" id="mt-4" onclick="switchMehrTab(4)">05 Klausuren</button>
       <button class="mehr-tab" id="mt-5" onclick="switchMehrTab(5)">06 Notizen</button>
+      <button class="mehr-tab" id="mt-6" onclick="switchMehrTab(6)">07 Einstellungen</button>
     </div>
 
     <!-- Tab 0: Lerntechniken -->
@@ -1436,6 +1483,43 @@
       <div id="notizen-list"></div>
       <button class="add-btn-m" onclick="addNotiz()"><span style="font-size:18px">+</span> Neue Notiz</button>
     </div>
+
+    <!-- Tab 6: Einstellungen -->
+    <div class="mehr-body" id="mt-body-6">
+      <span class="section-eyebrow">Einstellungen & Backup</span>
+
+      <!-- GitHub Gist Backup -->
+      <div class="settings-section">
+        <div class="settings-title">GitHub Gist Backup</div>
+        <div class="settings-desc">Deine Daten werden automatisch als privates GitHub Gist gesichert. Erstelle unter github.com → Settings → Developer settings → Personal access tokens ein Token mit dem Scope <strong>gist</strong>.</div>
+        <div class="settings-row">
+          <input class="settings-input" id="gist-token-input" type="password" placeholder="ghp_xxxxxxxxxxxx">
+          <button class="settings-btn" onclick="saveGistToken()">Speichern</button>
+        </div>
+        <button class="settings-btn-full accent" onclick="manualBackup()">☁ Jetzt sichern</button>
+        <button class="settings-btn-full" onclick="restoreFromGist()">↓ Aus Backup wiederherstellen</button>
+        <div class="settings-status" id="gist-status">Noch kein Token gespeichert.</div>
+      </div>
+
+      <!-- ICS Export -->
+      <div class="settings-section">
+        <div class="settings-title">Kalender-Export</div>
+        <div class="settings-desc">Exportiere deinen Stundenplan als .ics Datei — importierbar in Apple Kalender, Google Calendar und Outlook.</div>
+        <button class="settings-btn-full accent" onclick="exportAsICS()">📅 Stundenplan als .ics exportieren</button>
+        <button class="settings-btn-full" onclick="generateGCalLinks()">🗓 Google Calendar Links anzeigen</button>
+        <div id="gcal-links" style="display:none;margin-top:8px"></div>
+      </div>
+
+      <!-- JSON Export / Import -->
+      <div class="settings-section">
+        <div class="settings-title">JSON Export / Import</div>
+        <div class="settings-desc">Exportiere alle Daten als JSON-Datei oder importiere ein vorhandenes Backup.</div>
+        <button class="settings-btn-full accent" onclick="exportData()">↓ JSON-Backup herunterladen</button>
+        <button class="settings-btn-full" onclick="document.getElementById('import-file').click()">↑ JSON-Backup importieren</button>
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+        <div class="settings-status" id="import-status"></div>
+      </div>
+    </div>
   </div>
 </main>
 
@@ -1661,9 +1745,9 @@ function loadNotizen() {
   catch { return []; }
 }
 
-function persist()  { localStorage.setItem('syn-stundenplan-v2', JSON.stringify(courses)); }
-function persistK() { localStorage.setItem('syn-klausuren',      JSON.stringify(klausuren)); }
-function persistN() { localStorage.setItem('syn-notizen',        JSON.stringify(notizen)); }
+function persist()  { localStorage.setItem('syn-stundenplan-v2', JSON.stringify(courses));  scheduleAutoBackup(); }
+function persistK() { localStorage.setItem('syn-klausuren',      JSON.stringify(klausuren)); scheduleAutoBackup(); }
+function persistN() { localStorage.setItem('syn-notizen',        JSON.stringify(notizen));   scheduleAutoBackup(); }
 function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
 
 // ═══════════════════════════════════════════
@@ -1932,16 +2016,18 @@ function showMehr() {
   document.getElementById('fab-btn').style.display = 'none';
   if (activeMehrTab === 4) buildKlausuren();
   if (activeMehrTab === 5) buildNotizen();
+  if (activeMehrTab === 6) buildEinstellungen();
 }
 
 function switchMehrTab(idx) {
   activeMehrTab = idx;
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 7; i++) {
     document.getElementById(`mt-${i}`).classList.toggle('active', i === idx);
     document.getElementById(`mt-body-${i}`).classList.toggle('active', i === idx);
   }
   if (idx === 4) buildKlausuren();
   if (idx === 5) buildNotizen();
+  if (idx === 6) buildEinstellungen();
 }
 
 // ═══════════════════════════════════════════
@@ -2358,9 +2444,244 @@ document.addEventListener('touchend', e => {
 }, { passive: true });
 
 // ═══════════════════════════════════════════
+// GITHUB GIST BACKUP
+// ═══════════════════════════════════════════
+let backupTimer = null;
+
+function setBackupStatus(state, text) {
+  const dot  = document.getElementById('backup-dot');
+  const span = document.getElementById('backup-text');
+  if (!dot || !span) return;
+  dot.className = 'backup-dot' + (state === 'ok' ? ' ok' : state === 'err' ? ' err' : state === 'spin' ? ' spin' : '');
+  span.textContent = text;
+}
+
+function scheduleAutoBackup() {
+  clearTimeout(backupTimer);
+  backupTimer = setTimeout(autoBackup, 3000);
+}
+
+async function autoBackup() {
+  const token  = localStorage.getItem('syn-gist-token');
+  if (!token) return;
+  setBackupStatus('spin', 'Sichern…');
+  try {
+    await doGistBackup(token);
+    const now = new Date().toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
+    setBackupStatus('ok', now);
+    localStorage.setItem('syn-gist-last', now);
+  } catch(e) {
+    setBackupStatus('err', 'Fehler');
+  }
+}
+
+async function manualBackup() {
+  const token = localStorage.getItem('syn-gist-token');
+  if (!token) { showToast('Bitte zuerst Token eingeben!'); switchMehrTab(6); return; }
+  setBackupStatus('spin', 'Sichern…');
+  try {
+    await doGistBackup(token);
+    const now = new Date().toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
+    setBackupStatus('ok', now);
+    localStorage.setItem('syn-gist-last', now);
+    showToast('✓ Backup gespeichert');
+    buildEinstellungen();
+  } catch(e) {
+    setBackupStatus('err', 'Fehler');
+    showToast('Backup fehlgeschlagen: ' + e.message);
+  }
+}
+
+async function doGistBackup(token) {
+  const payload = {
+    description: 'Stundenplan SoSe 2026 — Backup',
+    public: false,
+    files: {
+      'stundenplan-backup.json': {
+        content: JSON.stringify({
+          courses, klausuren, notizen,
+          backed_up: new Date().toISOString()
+        }, null, 2)
+      }
+    }
+  };
+  const gistId = localStorage.getItem('syn-gist-id');
+  const url    = gistId ? `https://api.github.com/gists/${gistId}` : 'https://api.github.com/gists';
+  const method = gistId ? 'PATCH' : 'POST';
+  const res = await fetch(url, {
+    method,
+    headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error(res.status);
+  const data = await res.json();
+  if (!gistId) localStorage.setItem('syn-gist-id', data.id);
+}
+
+async function restoreFromGist() {
+  const token  = localStorage.getItem('syn-gist-token');
+  const gistId = localStorage.getItem('syn-gist-id');
+  if (!token || !gistId) { showToast('Kein Backup gefunden. Token + Backup nötig.'); return; }
+  if (!confirm('Alle lokalen Daten mit dem Backup überschreiben?')) return;
+  try {
+    const res  = await fetch(`https://api.github.com/gists/${gistId}`, {
+      headers: { Authorization: `token ${token}` }
+    });
+    if (!res.ok) throw new Error(res.status);
+    const gist = await res.json();
+    const raw  = gist.files['stundenplan-backup.json']?.content;
+    if (!raw) throw new Error('Datei nicht gefunden');
+    const data = JSON.parse(raw);
+    if (data.courses)   { courses = data.courses;     localStorage.setItem('syn-stundenplan-v2', JSON.stringify(courses)); }
+    if (data.klausuren) { klausuren = data.klausuren; localStorage.setItem('syn-klausuren',      JSON.stringify(klausuren)); }
+    if (data.notizen)   { notizen = data.notizen;     localStorage.setItem('syn-notizen',        JSON.stringify(notizen)); }
+    buildDayStrip();
+    renderDayView(activeDay);
+    showToast('✓ Backup wiederhergestellt');
+    buildEinstellungen();
+  } catch(e) {
+    showToast('Fehler: ' + e.message);
+  }
+}
+
+function saveGistToken() {
+  const val = document.getElementById('gist-token-input')?.value.trim();
+  if (!val) { showToast('Token eingeben!'); return; }
+  localStorage.setItem('syn-gist-token', val);
+  document.getElementById('gist-token-input').value = '';
+  showToast('Token gespeichert');
+  buildEinstellungen();
+  autoBackup();
+}
+
+function buildEinstellungen() {
+  const hasToken  = !!localStorage.getItem('syn-gist-token');
+  const gistId    = localStorage.getItem('syn-gist-id');
+  const lastBackup = localStorage.getItem('syn-gist-last');
+  const statusEl  = document.getElementById('gist-status');
+  if (statusEl) {
+    if (hasToken) {
+      statusEl.innerHTML = `Token: ✓ gespeichert<br>${gistId ? 'Gist-ID: ' + gistId : 'Noch kein Backup erstellt'}${lastBackup ? '<br>Letztes Backup: ' + lastBackup : ''}`;
+    } else {
+      statusEl.textContent = 'Noch kein Token gespeichert.';
+    }
+  }
+  const lastStr = lastBackup ? lastBackup : '—';
+  setBackupStatus(hasToken ? 'ok' : '', hasToken ? lastStr : '—');
+}
+
+// ═══════════════════════════════════════════
+// ICS EXPORT
+// ═══════════════════════════════════════════
+function exportAsICS() {
+  const DAY_OFFSET = { Mo:0, Di:1, Mi:2, Do:3, Fr:4 };
+  const SEM_START  = new Date('2026-04-06'); // Erster Montag des Semesters
+  const SEM_END    = '20260718T235959Z';
+
+  function pad(n) { return String(n).padStart(2,'0'); }
+  function icsDate(date, time) {
+    const [h, m] = time.split(':');
+    const d = new Date(date);
+    return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(h)}${pad(m)}00`;
+  }
+  function firstOccurrence(dayKey) {
+    const d = new Date(SEM_START);
+    d.setDate(d.getDate() + (DAY_OFFSET[dayKey] || 0));
+    return d;
+  }
+
+  let ics = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Synotix Stundenplan//DE\r\nCALSCALE:GREGORIAN\r\n';
+
+  courses.forEach(c => {
+    const first = firstOccurrence(c.day);
+    const dtStart = icsDate(first, c.start);
+    const dtEnd   = icsDate(first, c.end);
+    ics += `BEGIN:VEVENT\r\nUID:syn-${c.id}@stundenplan\r\nSUMMARY:${c.name}\r\nDTSTART:${dtStart}\r\nDTEND:${dtEnd}\r\nRRULE:FREQ=WEEKLY;UNTIL=${SEM_END}\r\nLOCATION:${c.room || ''}\r\nDESCRIPTION:${c.prof || ''}\r\nEND:VEVENT\r\n`;
+  });
+
+  klausuren.forEach(k => {
+    const [y,mo,d] = k.date.split('-');
+    const time = k.time || '09:00';
+    const [h,m] = time.split(':');
+    const dtS = `${y}${mo}${d}T${h}${m}00`;
+    const dtE = `${y}${mo}${d}T${pad(parseInt(h)+2)}${m}00`;
+    ics += `BEGIN:VEVENT\r\nUID:syn-k-${k.id}@stundenplan\r\nSUMMARY:${k.name}\r\nDTSTART:${dtS}\r\nDTEND:${dtE}\r\nBEGIN:VALARM\r\nTRIGGER:-PT24H\r\nACTION:DISPLAY\r\nDESCRIPTION:Morgen: ${k.name}\r\nEND:VALARM\r\nEND:VEVENT\r\n`;
+  });
+
+  ics += 'END:VCALENDAR';
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'stundenplan-sose26.ics'; a.click();
+  URL.revokeObjectURL(url);
+  showToast('Kalender-Datei heruntergeladen');
+}
+
+// ═══════════════════════════════════════════
+// GOOGLE CALENDAR LINKS
+// ═══════════════════════════════════════════
+function generateGCalLinks() {
+  const container = document.getElementById('gcal-links');
+  if (!container) return;
+  const DAY_OFFSET = { Mo:0, Di:1, Mi:2, Do:3, Fr:4 };
+  const SEM_START  = new Date('2026-04-06');
+  function gcalDate(dayKey, time) {
+    const d = new Date(SEM_START);
+    d.setDate(d.getDate() + (DAY_OFFSET[dayKey] || 0));
+    const [h, m] = time.split(':');
+    return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}T${h}${m}00`;
+  }
+  const all = [...courses.map(c => {
+    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(c.name)}&dates=${gcalDate(c.day,c.start)}/${gcalDate(c.day,c.end)}&location=${encodeURIComponent(c.room||'')}&details=${encodeURIComponent((c.prof||'') + ' · Wöchentlich')}`;
+    return `<a href="${url}" target="_blank" style="display:block;padding:8px 10px;margin-bottom:4px;background:var(--bg-3);color:var(--tx-d0);text-decoration:none;font-family:var(--f-mono);font-size:11px;border:1px solid var(--bd);">${c.day} ${c.start} · ${c.name}</a>`;
+  }),
+  ...klausuren.map(k => {
+    const [y,mo,d] = k.date.split('-');
+    const t = (k.time||'09:00').replace(':','');
+    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(k.name)}&dates=${y}${mo}${d}T${t}00/${y}${mo}${d}T${String(parseInt(t.slice(0,2))+2).padStart(2,'0')}${t.slice(2)}00`;
+    return `<a href="${url}" target="_blank" style="display:block;padding:8px 10px;margin-bottom:4px;background:var(--orange-glow);color:var(--orange);text-decoration:none;font-family:var(--f-mono);font-size:11px;border:1px solid var(--orange-line);">${k.date} · ${k.name}</a>`;
+  })];
+  container.innerHTML = `<div style="font-family:var(--f-mono);font-size:9px;color:var(--tx-d2);margin-bottom:8px;letter-spacing:0.10em">KLICK AUF EINTRAG ÖFFNET GOOGLE CALENDAR</div>` + all.join('');
+  container.style.display = 'block';
+}
+
+// ═══════════════════════════════════════════
+// JSON IMPORT
+// ═══════════════════════════════════════════
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.courses && !data.klausuren && !data.notizen) throw new Error('Ungültiges Format');
+      if (!confirm('Vorhandene Daten überschreiben?')) return;
+      if (data.courses)   { courses = data.courses;     localStorage.setItem('syn-stundenplan-v2', JSON.stringify(courses)); }
+      if (data.klausuren) { klausuren = data.klausuren; localStorage.setItem('syn-klausuren',      JSON.stringify(klausuren)); }
+      if (data.notizen)   { notizen = data.notizen;     localStorage.setItem('syn-notizen',        JSON.stringify(notizen)); }
+      buildDayStrip(); renderDayView(activeDay);
+      document.getElementById('import-status').textContent = `✓ Importiert: ${data.courses?.length||0} Kurse, ${data.klausuren?.length||0} Prüfungen, ${data.notizen?.length||0} Notizen`;
+      showToast('✓ Import erfolgreich');
+    } catch(err) {
+      document.getElementById('import-status').textContent = 'Fehler: ' + err.message;
+      showToast('Import fehlgeschlagen');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ═══════════════════════════════════════════
 // BOOT
 // ═══════════════════════════════════════════
 init();
+// Init backup status on load
+(function() {
+  const last = localStorage.getItem('syn-gist-last');
+  const hasToken = !!localStorage.getItem('syn-gist-token');
+  setBackupStatus(hasToken ? 'ok' : '', hasToken ? (last || '—') : '—');
+})();
 </script>
 </body>
 </html>
